@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="csrf-token" content="{{ csrf_token }}">
+    <meta charset="UTF-8"> <!-- 设置网页的字符编码为UTF-8，确保网页在不同语言下正确显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 让网页在不同设备上自适应大小 -->
+    <title>智能家居管理系统</title> <!-- 网页标题，显示在浏览器标签页上 -->
+    <link rel="stylesheet" href="../static/home.css"> <!-- 引入外部CSS文件，用于样式管理 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入jQuery库，简化JavaScript操作 -->
+</head>
+<body>
+<div style="text-align:center;clear:both;"></div> <!-- 设置一个居中的清除浮动的div -->
+<!-- 背景 iframe，保持不变 -->
+<iframe src="../static/background.html" class="background"></iframe> <!-- 嵌入iframe元素，用于背景显示 -->
+
+<!-- 标签式布局的主要结构 -->
+<article class="tabs">
+
+<!-- 第一个标签页，设备控制，默认选中 -->
+<input checked id="one" name="tabs" type="radio">
+<label for="one">设备控制</label>
+
+<!-- 第二个标签页，脚本控制 -->
+<input id="two" name="tabs" type="radio" value="Two">
+<label for="two">脚本控制</label>
+
+<!-- 第三个标签页，数据统计 -->
+<input id="three" name="tabs" type="radio" value="three">
+<label for="three">数据统计</label>
+
+<!-- 第四个标签页，设备添加 -->
+<input id="four" name="tabs" type="radio" value="four">
+<label for="four">设备添加</label>
+
+<!-- 第五个标签页，设备删除 -->
+<input id="five" name="tabs" type="radio" class="tab-switch">
+<label for="five">设备删除</label>
+
+<input id="six" name="tabs" type="radio" class="tab-switch">
+<label for="six">BROKER</label>
+
+
+    <!-- 面板区域，包含各个标签页对应的内容 -->
+	<div class="panels">
+
+
+		<div class="panel">
+		    <h2>This is Panel One</h2> <!-- 标签页1的内容标题 -->
+		</div>
+
+		<div class="panel">
+		    <h2>This is Panel two</h2> <!-- 标签页1的内容标题 -->
+		</div>
+
+		<div class="panel">
+		    <h2>This is Panel three</h2> <!-- 标签页1的内容标题 -->
+		</div>
+
+
+		<!-- 第二个标签页内容，设备添加 -->
+		<div class="panel">
+			<h2>设备添加</h2> <!-- 标签页2的内容标题 -->
+
+			<!-- 创建一个表单，用于设备添加，POST请求提交 -->
+			<form action="#" method="POST">
+				{% csrf_token %}
+				<table>
+					<!-- 表单第一行，输入设备名称 -->
+					<tr>
+						<td>deviceName:</td> <!-- 表单标签，设备名称 -->
+						<td><input type="text" name="deviceName" required></td> <!-- 输入框，用户必须输入设备名称 -->
+					</tr>
+					<!-- 表单第二行，输入设备订阅主题 -->
+					<tr>
+						<td>deviceTopic:</td> <!-- 表单标签，设备订阅的MQTT主题 -->
+						<td><input type="text" name="deviceTopic" required></td> <!-- 输入框，用户必须输入设备订阅主题 -->
+					</tr>
+
+
+
+					<!-- 设备数据变量表格 -->
+					<table id="deviceVariableTable">
+						<!-- 表单第三行，输入设备数据变量名称 -->
+						<tr>
+							<button type="button" onclick="addDeviceVariable()">AddValue</button>
+							<td>ValueName:</td>
+							<!-- 输入框，用户必须输入变量名称 -->
+							<td><input type="text" name="deviceValueName[]" required></td>
+							<td>
+								<select name="deviceValueType[]" required>
+									<option value="int">int</option>
+									<option value="float">float</option>
+									<option value="bool">bool</option>
+								</select>
+							</td>
+
+
+							<td>
+								 <select name="data_direction[]" required>
+										<option value="receive">Receive</option>
+										<option value="send">Send</option>
+										<option value="both">Both</option>
+								 </select>
+							</td>
+
+
+							<td>
+								<button type="button" onclick="delectDeviceVariable(this)">delect</button>
+							</td>
+						</tr>
+					</table>
+				</table>
+				 <!-- 引入外部 JavaScript 文件 -->
+				<div class="submit">
+
+					<button type="submit" onclick="submitForm()">Commit</button> <!-- 提交表单的按钮 -->
+				</div>
+			</form>
+		</div>
+
+		<div class="panel">
+		<h2>Device List</h2>
+			<table id="device-table">
+				<thead>
+					<tr>
+						<th>Device Name</th> <!-- 设备名称 -->
+						<th>Client Id</th><!-- 客户端ID -->
+						<th>Device Topic</th> <!-- 设备主题 -->
+						<th>Device Value</th><!-- 设备数据 -->
+						<th>Actions</th> <!-- 操作 -->
+					</tr>
+				</thead>
+				<tbody>
+					{% for device in devices %}
+						<tr id="device-{{ device.device_id }}">
+							<td>{{ device.device_name }}</td> <!-- 设备名称 -->
+							<td>{{ device.device_client_id }}</td>
+							<td>{{ device.device_topic }}</td> <!-- 设备主题 -->
+							<td>{% for value in device.device_values %}
+								{{ value.value_type }}:{{value.data_direction}}:{{ value.value_type }}<br>
+							{% endfor %}</td>
+							<td>
+									<button type="button" data-device-id="{{ device.device_id }}">Delete</button>
+								<!-- 删除按钮 -->
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+
+
+
+	</div>
+
+<div class="panel">
+    <h2>Config MQTT Broker</h2> <!-- 标签页1的内容标题 -->
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</div> <!-- 面板结束 -->
+</article> <!-- 标签式布局结束 -->
+
+<!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
+<script src="../static/DeleteEquipment.js"></script>
+<script src="../static/AddEquipment.js"></script>
+<script src="../static/home.js"></script>
+</body>
+</html>

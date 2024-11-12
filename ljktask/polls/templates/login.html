@@ -1,0 +1,36 @@
+<!DOCTYPE html> <!-- 声明文档类型为HTML5 -->
+<html lang="zh"> <!-- 开始HTML文档，设置语言为中文 -->
+<head>
+    <meta charset="UTF-8"> <!-- 设置文档字符编码为UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视口，以便在移动设备上响应式显示 -->
+    <title>登录界面</title> <!-- 设置页面标题 -->
+    <link rel="stylesheet" href="../static/login.css"> <!-- 引入外部CSS样式文件 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入jQuery -->
+    <script src="../static/login.js"></script> <!-- 引入外部JavaScript文件 -->
+</head>
+<body>
+    <div class="container" id="loginContainer"> <!-- 登录表单的容器 -->
+        <h2>登录</h2> <!-- 登录表单的标题 -->
+        <form id="loginForm" method="post"> <!-- 创建表单，使用AJAX提交 -->
+            {% csrf_token %} <!-- 添加 CSRF 令牌 -->
+            <input type="text" name="username" placeholder="用户名" required> <!-- 用户名输入框 -->
+            <input type="password" name="password" id="password" placeholder="密码" required> <!-- 密码输入框 -->
+            <input type="checkbox" id="showPassword"> <!-- 复选框，用于显示密码 -->
+            <label for="showPassword">显示密码</label> <!-- 复选框标签 -->
+            <button type="submit">登录</button> <!-- 登录按钮 -->
+        </form>
+    </div>
+
+    <script>
+        // 切换密码可见性
+        document.getElementById('showPassword').addEventListener('change', function() {
+            const passwordInput = document.getElementById('password');
+            if (this.checked) {
+                passwordInput.type = 'text'; // 显示明文密码
+            } else {
+                passwordInput.type = 'password'; // 隐藏密码
+            }
+        });
+    </script>
+</body>
+</html>

@@ -45,20 +45,14 @@ class DeviceVariable(models.Model):
     def __str__(self):
         return f"{self.value_name} ({self.value_type})"
 
-#未迁移
-class MQTTServerConfig(models.Model):
-    # MQTT 服务器的地址
+
+
+class MqttServer(models.Model):
     server_address = models.CharField(max_length=255)
-    # MQTT 服务器的端口
-    port = models.IntegerField(default=1883)  # 默认端口为 1883
-    # 用户名（如果需要身份验证）
+    port = models.IntegerField(default=1883)
     username = models.CharField(max_length=255, blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
-    # 客户端ID使用一个固定id
     client_id = models.CharField(max_length=255, blank=True, null=True)
-    # 密码（如果需要身份验证）
-
-
     # 最后修改时间
     last_modified = models.DateTimeField(auto_now=True)
     # 连接状态
@@ -72,3 +66,21 @@ class MQTTServerConfig(models.Model):
         # 在此方法中可以添加连接服务器的逻辑
         # 例如尝试连接服务器并返回连接状态
         pass
+
+    @staticmethod
+    def get_or_create_default_config(data=None):
+        """保证最多只有一条 MQTT 配置"""
+        # 如果没有配置则创建新的配置，如果已经有配置则更新现有配置
+        mqtt_server, created = MqttServer.objects.get_or_create(id=1)  # 假设使用 id=1 的唯一记录
+        if data:
+            # 如果传入了数据，更新现有的配置
+            mqtt_server.server_address = data.get('server_address', mqtt_server.server_address)
+            mqtt_server.port = data.get('port', mqtt_server.port)
+            mqtt_server.username = data.get('username', mqtt_server.username)
+            mqtt_server.password = data.get('password', mqtt_server.password)
+            mqtt_server.client_id = data.get('client_id', mqtt_server.client_id)
+            mqtt_server.save()
+        return mqtt_server
+
+    def __str__(self):
+        return self.server_address

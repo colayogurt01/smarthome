@@ -3,7 +3,7 @@ from django.urls import path  # 导入 Django 的路径函数，用于定义 URL
 from .views import home_view  # 从当前应用的 views.py 文件中导入 home_view 视图
 from .views import login_view  # 从当前应用的 views.py 文件中导入 login_view 视图
 from .views import control_device
-from .views import mqtt_server_config
+from .views import MqttServerList
 from .views import add_device,delete_device,get_device_list
 
 urlpatterns = [  # 定义 URL 路由列表
@@ -13,7 +13,7 @@ urlpatterns = [  # 定义 URL 路由列表
     path('add-device/', add_device, name='add_device'),
     path('delete_device/<int:device_id>/', delete_device, name='delete_device'),
     path('get_device_list/', get_device_list, name='get_device_list'),
-    path('mqtt-server-config/', mqtt_server_config, name='mqtt_server_config'),
+    path('mqtt-servers/', MqttServerList.as_view(), name='mqtt-server-list'),
 
     # 其他路由
 ]

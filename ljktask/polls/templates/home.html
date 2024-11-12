@@ -147,16 +147,58 @@
 					{% endfor %}
 				</tbody>
 			</table>
-
-
-
-
 	</div>
 
 <div class="panel">
     <h2>Config MQTT Broker</h2> <!-- 标签页1的内容标题 -->
+    <form id="mqttConfigForm">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>标签</th>
+                    <th>输入框</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Broker Address:</td>
+                    <td><input type="text" id="server_address" name="server_address" maxlength="255" required></td>
+                </tr>
+                <tr>
+                    <td>Port:</td>
+                    <td><input type="number" id="port" name="port" required></td>
+                </tr>
+                <tr>
+                    <td>Client ID:</td>
+                    <td><input type="text" id="client_id" name="client_id" maxlength="255"></td>
+                </tr>
+                <tr>
+                    <td>Username:</td>
+                    <td><input type="text" id="username" name="username" maxlength="255"></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td>
+						<input type="password" id="password" name="password" maxlength="255">
+						<label for="showPassword" style="cursor: pointer;">
+							<span id="eye-icon" class="eye-icon">&#128065;</span> <!-- 眼睛图标 -->
+						</label>
+						<input type="checkbox" id="showPassword" style="display: none;">
+					</td>
 
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button type="button" onclick="submitMqttConfig()">Save</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
+
+
 
 
 
@@ -187,6 +229,7 @@
 </article> <!-- 标签式布局结束 -->
 
 <!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
+<script src="../static/ConfigBroker.js"></script>
 <script src="../static/DeleteEquipment.js"></script>
 <script src="../static/AddEquipment.js"></script>
 <script src="../static/home.js"></script>

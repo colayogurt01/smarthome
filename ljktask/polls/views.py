@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from .message import client  # 导入 MQTT 客户端
 from django.http import JsonResponse
-from .models import Device, DeviceVariable,MQTTServerConfig
+from .models import Device, DeviceVariable,MqttServer
 import json
 
 
@@ -34,6 +34,7 @@ def login_view(request):
 def home_view(request):
     return render(request, 'home.html')
 def get_device_list(request):
+    print("Received GET requestget_device_list")
     devices = Device.objects.all()  # 获取所有设备
     device_data = []
     for device in devices:
@@ -98,7 +99,7 @@ def add_device(request):
 
 @csrf_exempt
 def delete_device(request, device_id):
-    print("Received DELETE request")
+    print("Received DELETE requestdelete_device")
     print(request.method)  # 打印请求方法
     print(request.body)  # 打印请求体
     print(device_id)  # 打印设备 ID
@@ -108,59 +109,36 @@ def delete_device(request, device_id):
         return JsonResponse({'message': 'Device deleted successfully!'})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-# views.py
-from django.http import JsonResponse
+
 from django.shortcuts import render
-from .models import MQTTServerConfig
+from django.http import JsonResponse
+from .models import MqttServer
+from django.views.decorators.csrf import csrf_exempt
 
-def mqtt_server_config(request):
-    try:
-        if request.method == 'POST':
-            # 获取 POST 数据并保存或更新配置
-            server_address = request.POST.get('server_address')
-            port = request.POST.get('port')
-            username = request.POST.get('username', '')
-            password = request.POST.get('password', '')
-            client_id = request.POST.get('client_id', '')
+# 处理 MQTT 配置页面请求
 
-            mqtt_server = MQTTServerConfig.objects.first()
-            if mqtt_server:
-                mqtt_server.server_address = server_address
-                mqtt_server.port = port
-                mqtt_server.username = username
-                mqtt_server.password = password
-                mqtt_server.client_id = client_id
-                mqtt_server.save()
-            else:
-                mqtt_server = MQTTServerConfig(
-                    server_address=server_address,
-                    port=port,
-                    username=username,
-                    password=password,
-                    client_id=client_id
-                )
-                mqtt_server.save()
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import MqttServer
+from .serializers import MqttServerSerializer
 
-            return JsonResponse({'success': True})
-
-        # 获取现有配置数据
-        mqtt_server = MQTTServerConfig.objects.first()
+class MqttServerList(APIView):
+    def get(self, request):
+        print("Received GET requestMqttServerList")
+        # 获取唯一的配置记录
+        mqtt_server = MqttServer.objects.first()
         if mqtt_server:
-            mqtt_server_data = {
-                'server_address': mqtt_server.server_address,
-                'port': mqtt_server.port,
-                'username': mqtt_server.username,
-                'password': mqtt_server.password,
-                'client_id': mqtt_server.client_id
-            }
-            return JsonResponse({'success': True, 'mqtt_server': mqtt_server_data})
-        else:
-            print('No MQTT Server')
-            return JsonResponse({'success': False, 'error': 'No configuration found'})
+            serializer = MqttServerSerializer(mqtt_server)
+            return Response(serializer.data)
+        return Response({"message": "No MQTT server configuration found."}, status=status.HTTP_404_NOT_FOUND)
 
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)})
-
+    def post(self, request):
+        print("Received POST request")
+        # 只允许创建或更新唯一的配置记录
+        mqtt_server = MqttServer.get_or_create_default_config(data=request.data)
+        serializer = MqttServerSerializer(mqtt_server)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 #控制设备
 #接受前端发送的数据
 @api_view(['POST'])

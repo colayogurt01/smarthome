@@ -66,21 +66,26 @@ label {
     float: left; /* 标签左对齐 */
     margin-right: 2px; /* 右边距2px */
     font:  1.3em Cambria; /* 斜体，使用 Cambria 字体 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 添加模糊阴影效果 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加模糊阴影效果 */
 }
 
 /* 悬停时的标签效果 */
 label:hover {
    background: transparent; /* 鼠标悬停时背景仍为透明 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* 添加模糊阴影效果 */
+
 }
 input[type="radio"] {
     display: none; /* 隐藏实际的 radio 按钮 */
 }
-input[type="radio"]:checked + label::before {
-    background: transparent; /* 选中时背景为透明 */
-    color:#8983F7;
+/*input[type="radio"]:checked + label::before {*/
+/*    background: transparent; !* 选中时背景为透明 *!*/
+/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); !* 焦点时的阴影效果 *!*/
 
-}
+/*    color:#8983F7;*/
+
+
+/*}*/
 
 /* 选中标签页时显示对应的面板 */
 .tabs input:nth-of-type(1):checked ~ .panels .panel:nth-child(1),
@@ -131,23 +136,73 @@ input[type="radio"]:checked + label::before {
   border-spacing: 5px 10px;  /* 第一项是水平间距，第二项是垂直间距 */
 }
 
-.panel input[type=text],input[type=number],input[type=password], select
-{
-   padding: 8px 12px;
-  display: inline-block;
-  border: none; /* 删除边框 */
-  background: transparent; /* 设置背景为透明 */
-  box-sizing: border-box;
-    float: left; /* 标签左对齐 */
+.panel input[type=text], input[type=number], input[type=password], select {
+    padding: 8px 12px;
+    display: inline-block;
+    border: none;
+    background: transparent;  /* 默认透明背景 */
+    box-sizing: border-box;
+    float: left;
     margin-right: 2%; /* 右边距2px */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 添加模糊阴影效果 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加模糊阴影效果 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 4px; /* 设置圆角 */
 
+}
+
+/* 输入框获得焦点时 */
+.panel input[type=text]:focus,
+.panel input[type=number]:focus,
+.panel input[type=password]:focus,
+.panel select:focus {
+    background-color: rgba(0, 0, 0, 0.1);  /* 略带透明度的背景色 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* 焦点时的阴影效果 */
+    outline: none;  /* 去除默认的聚焦边框 */
+}
+
+/* 输入框有内容时 */
+.panel input[type=text]:valid,
+.panel input[type=number]:valid,
+.panel input[type=password]:valid {
+    background-color: rgba(0, 0, 0, 0.3);  /* 有内容时略显背景 */
+}
+
+/* 输入框为空时 */
+.panel input[type=text]:empty,
+.panel input[type=number]:empty,
+.panel input[type=password]:empty {
+    background-color: transparent;  /* 空时保持透明背景 */
 }
 
 .panel select {
+    background: transparent;  /* 设置按钮的背景色为透明 */
     width: 100%;
     border: none;
+    border-radius: 4px; /* 设置圆角 */
+
 }
+
+/* 选中时的效果 */
+.panel select:focus {
+    border-color: #007BFF;  /* 焦点时的边框颜色 */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* 聚焦时的阴影效果 */
+}
+
+/* 定义 option 元素样式 */
+.panel select option {
+    background: transparent;  /* 设置按钮的背景色为透明 */
+    padding: 10px; /* 添加内边距 */
+    color: #333; /* 设置选项的字体颜色 */
+    font-size: 1em; /* 设置字体大小 */
+}
+
+/* 当 hover 或 focus 时选项样式 */
+.panel select option:hover {
+    background: transparent;  /* 设置按钮的背景色为透明 */
+}
+
+
+
 .panel button {
   border: none;  /* 去除按钮的边框 */
   padding: 8px 12px;  /* 设置按钮的内边距，垂直方向为 12px，水平方向为 20px */
@@ -175,6 +230,8 @@ input[type="radio"]:checked + label::before {
   margin: 8px 0;  /* 保持按钮的外边距为上下 8px，左右 0 */
   border-radius: 4px;  /* 保持圆角样式 */
 }
+
+
 
 
 
@@ -237,29 +294,30 @@ form {
 
 
 
-/*!* 设备卡片容器样式 *!*/
-/*.device-container {*/
-/*    display: flex; !* 使用 flex 布局 *!*/
-/*    flex-wrap: wrap; !* 允许卡片换行 *!*/
-/*    justify-content: center; !* 卡片居中对齐 *!*/
-/*    gap: 20px; !* 为卡片之间添加间距 *!*/
-/*}*/
 
-/*!* 单个设备卡片样式 *!*/
-/*.device-card {*/
-/*    background: rgba(255, 255, 255, 0.8); !* 背景半透明 *!*/
-/*    border: 1px solid #cccccc; !* 设置浅色边框 *!*/
-/*    border-radius: 10px; !* 设置圆角 *!*/
-/*    padding: 15px; !* 内边距为15px *!*/
-/*    width: 200px; !* 固定宽度为200px *!*/
-/*    height: 200px; !* 固定高度为200px，确保卡片为正方形 *!*/
-/*    text-align: center; !* 文字居中对齐 *!*/
-/*    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); !* 添加阴影效果 *!*/
-/*    transition: transform 0.3s, box-shadow 0.3s; !* 添加放大和阴影的过渡效果 *!*/
-/*}*/
+/* 设备卡片容器样式 */
+.device-container {
+    display: flex; /* 使用 flex 布局 */
+    flex-wrap: wrap; /* 允许卡片换行 */
+    justify-content: center; /* 卡片居中对齐 */
+    gap: 20px; /* 为卡片之间添加间距 */
+}
 
-/*!* 鼠标悬停时的卡片效果 *!*/
-/*.device-card:hover {*/
-/*    transform: scale(1.05); !* 悬停时放大卡片 *!*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); !* 悬停时增加阴影效果 *!*/
-/*}*/
+/* 单个设备卡片样式 */
+.device-card {
+    background: rgba(255, 255, 255, 0.8); /* 背景半透明 */
+    border: 1px solid #cccccc; /* 设置浅色边框 */
+    border-radius: 10px; /* 设置圆角 */
+    padding: 15px; /* 内边距为15px */
+    width: 200px; /* 固定宽度为200px */
+    height: 200px; /* 固定高度为200px，确保卡片为正方形 */
+    text-align: center; /* 文字居中对齐 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    transition: transform 0.3s, box-shadow 0.3s; /* 添加放大和阴影的过渡效果 */
+}
+
+/* 鼠标悬停时的卡片效果 */
+.device-card:hover {
+    transform: scale(1.05); /* 悬停时放大卡片 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 悬停时增加阴影效果 */
+}

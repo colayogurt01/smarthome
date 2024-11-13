@@ -141,7 +141,7 @@ input[type="radio"] {
 .container {
   z-index: 500; /* 确保按钮在最上层 */
   width: 18rem; /* 固定宽度为14rem */
-  height:12rem; /* 固定高度为4rem */
+  height:16rem; /* 固定高度为4rem */
 
   color: #171717; /* 设置文字颜色为深灰色 */
   position: relative; /* 设置容器为相对定位 */
@@ -151,7 +151,7 @@ input[type="radio"] {
 /* .box样式 */
 .container .box {
   width: 14rem; /* 固定宽度为14rem */
-  height: 8rem; /* 固定高度为4rem */
+  height: 10rem; /* 固定高度为4rem */
   padding: 1rem; /* 内边距1rem */
   background-color: rgba(255, 255, 255, 0.074); /* 设置背景色为白色带透明度 */
   border: 1px solid rgba(255, 255, 255, 0.222); /* 设置边框为白色带透明度 */
@@ -184,7 +184,7 @@ input[type="radio"] {
   box-shadow: 0px 0px 3px rgb(2, 2, 2) inset;
 
   /* 合并居中属性 */
-  margin: 30px auto 10px; /* 上、左右、下的间距 */
+  margin: 50px auto 5px; /* 上、左右、下的间距 */
 }
 
 .switch svg {
@@ -218,7 +218,7 @@ input[type="radio"] {
   align-items: center;
 
   /* 使用外边距来调整位置 */
-  margin-top: 50px; /* 上边距 */
+  margin-top: 0px; /* 上边距 */
   margin-left: auto; /* 左边距自动，居中 */
   margin-right: auto; /* 右边距自动，居中 */
   margin-bottom: 2px; /* 下边距 */

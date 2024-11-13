@@ -1,15 +1,20 @@
-import json
+# Django标准库
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from .message import client,on_connect  # 导入 MQTT 客户端
 from django.http import JsonResponse
-from .models import Device, DeviceVariable,MqttServer
 import json
+
+# Django REST Framework
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+# 本地应用导入
+from .models import Device, DeviceVariable, MqttServer
+from .serializers import MqttServerSerializer
+from .message import client, on_connect  # 导入 MQTT 客户端
 
 
 def login_view(request):
@@ -113,18 +118,7 @@ def delete_device(request, device_id):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import MqttServer
-from django.views.decorators.csrf import csrf_exempt
 
-# 处理 MQTT 配置页面请求
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .models import MqttServer
-from .serializers import MqttServerSerializer
 
 class MqttServerList(APIView):
     def get(self, request):

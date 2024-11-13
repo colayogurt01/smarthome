@@ -48,50 +48,50 @@ function submitForm() {
     let deviceName = document.querySelector('input[name="deviceName"]').value;
     let deviceTopic = document.querySelector('input[name="deviceTopic"]').value;
 
-    // 获取所有的设备数据变量名称（name）
+    // 验证设备名称和主题是否为空
+    if (!deviceName || !deviceTopic) {
+        alert('设备名称和主题不能为空');
+        return;
+    }
+
+    // 获取所有的设备数据变量名称、类型和数据方向
     let deviceValueNames = [];
-    let valueNameInputs = document.querySelectorAll('input[name="deviceValueName[]"]');
-    valueNameInputs.forEach(input => {
-        deviceValueNames.push(input.value);
-    });
-
-    // 获取所有的设备数据类型（type）
     let deviceValueTypes = [];
-    let valueTypeSelects = document.querySelectorAll('select[name="deviceValueType[]"]');
-    valueTypeSelects.forEach(select => {
-        deviceValueTypes.push(select.value);
-    });
-
-    // 获取所有的数据方向（data_direction）
     let deviceDataDirections = [];
+    let valueNameInputs = document.querySelectorAll('input[name="deviceValueName[]"]');
+    let valueTypeSelects = document.querySelectorAll('select[name="deviceValueType[]"]');
     let dataDirectionsSelects = document.querySelectorAll('select[name="data_direction[]"]');
-    dataDirectionsSelects.forEach(select => {
-        deviceDataDirections.push(select.value);  // 获取数据方向
-    });
 
+    // 收集所有数据
+    valueNameInputs.forEach(input => deviceValueNames.push(input.value));
+    valueTypeSelects.forEach(select => deviceValueTypes.push(select.value));
+    dataDirectionsSelects.forEach(select => deviceDataDirections.push(select.value));
+
+    // 验证每个设备变量行是否填写完整
+    for (let i = 0; i < deviceValueNames.length; i++) {
+        if (!deviceValueNames[i] || !deviceValueTypes[i] || !deviceDataDirections[i]) {
+            alert('每个设备数据变量行必须填写完整');
+            return;
+        }
+    }
 
     // 整理数据为一个 JSON 对象
     let formData = {
         deviceName: deviceName,
         deviceTopic: deviceTopic,
-        deviceVariables: []
+        deviceVariables: deviceValueNames.map((valueName, index) => ({
+            valueName: valueName,
+            valueType: deviceValueTypes[index],
+            dataDirection: deviceDataDirections[index]
+        }))
     };
 
-    // 将数据变量名称、类型和数据方向按顺序配对
-    for (let i = 0; i < deviceValueNames.length; i++) {
-        formData.deviceVariables.push({
-            valueName: deviceValueNames[i],
-            valueType: deviceValueTypes[i],
-            dataDirection: deviceDataDirections[i]  // 获取数据方向
-        });
-    }
-
-    // 输出整理后的 JSON 数据
     console.log(JSON.stringify(formData));
 
-    // 发送数据到服务器 (可以使用 AJAX)
+    // 发送数据到服务器
     sendDataToServer(formData);
 }
+
 
 // 发送数据到服务器
 function sendDataToServer(data) {

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from .message import client  # 导入 MQTT 客户端
+from .message import client,on_connect  # 导入 MQTT 客户端
 from django.http import JsonResponse
 from .models import Device, DeviceVariable,MqttServer
 import json
@@ -75,6 +75,7 @@ def add_device(request):
                 value_type = variable.get('valueType')
                 data_direction = variable.get('dataDirection', 'both')  # 如果没有提供 data_direction, 默认使用 'both'
 
+
                 # 创建 DeviceVariable 实例
                 DeviceVariable.objects.create(
                     device=device,
@@ -82,6 +83,7 @@ def add_device(request):
                     value_type=value_type,
                     data_direction=data_direction
                 )
+            on_connect();
 
             return JsonResponse({'status': 'success', 'message': 'Device added successfully'}, status=200)
 
@@ -106,6 +108,7 @@ def delete_device(request, device_id):
     if request.method == 'DELETE':
         device = get_object_or_404(Device, id=device_id)
         device.delete()
+        on_connect();
         return JsonResponse({'message': 'Device deleted successfully!'})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
@@ -141,30 +144,30 @@ class MqttServerList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 #控制设备
 #接受前端发送的数据
-@api_view(['POST'])
-def control_device(request):
-    if request.method == 'POST':
-        set_subject = "test/topic"#后续升级可以修改
-        state = request.POST.get('state')
-        # device_name = request.POST.get('device_name')
-        if state == "on":
-            state_value=1;
-        else:
-            state_value=0;
-    #  data = {
-    #         device_name: {
-    #                         "temp": temperature,
-    #                         "humi": humidity
-    #                     },
-    #             "version": "1.0.0"
-    # }
-        data = {'state': state_value}
-
-        json_string = json.dumps(data)
-        print(json_string)
-        client.publish(set_subject, json_string)
-        return Response(data, status=200)
-    return Response({"error": "Invalid request"}, status=400)  # 处理其他情
+# @api_view(['POST'])
+# def control_device(request):
+#     if request.method == 'POST':
+#         set_subject = "test/topic"#后续升级可以修改
+#         state = request.POST.get('state')
+#         # device_name = request.POST.get('device_name')
+#         if state == "on":
+#             state_value=1;
+#         else:
+#             state_value=0;
+#     #  data = {
+#     #         device_name: {
+#     #                         "temp": temperature,
+#     #                         "humi": humidity
+#     #                     },
+#     #             "version": "1.0.0"
+#     # }
+#         data = {'state': state_value}
+#
+#         json_string = json.dumps(data)
+#         print(json_string)
+#         client.publish(set_subject, json_string)
+#         return Response(data, status=200)
+#     return Response({"error": "Invalid request"}, status=400)  # 处理其他情
 
 
 

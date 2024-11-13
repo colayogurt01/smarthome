@@ -25,7 +25,7 @@ class Device(models.Model):
         raw_string = f"{self.id}-{self.device_name}-{timestamp}-{unique_id}"
         # 使用 SHA-256 生成哈希值，截取前 16 位
         hashed_id = hashlib.sha256(raw_string.encode('utf-8')).hexdigest()[:16]
-        return f"device-{hashed_id}"
+        return f"{hashed_id}"
 
     def save(self, *args, **kwargs):
         """

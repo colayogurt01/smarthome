@@ -78,14 +78,7 @@ label:hover {
 input[type="radio"] {
     display: none; /* 隐藏实际的 radio 按钮 */
 }
-/*input[type="radio"]:checked + label::before {*/
-/*    background: transparent; !* 选中时背景为透明 *!*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); !* 焦点时的阴影效果 *!*/
 
-/*    color:#8983F7;*/
-
-
-/*}*/
 
 /* 选中标签页时显示对应的面板 */
 .tabs input:nth-of-type(1):checked ~ .panels .panel:nth-child(1),
@@ -132,6 +125,158 @@ input[type="radio"] {
     margin: 0; /* 删除默认外边距 */
     font-family: Arial; /* 使用 Arial 字体 */
 }
+.containers {
+    display: flex; /* 使用 flexbox 布局 */
+    flex-wrap: wrap; /* 换行 */
+    justify-content: flex-start; /* 水平从左到右排列 */
+    align-items: center; /* 垂直居中对齐 */
+    gap: 3%; /* 设置容器之间的间距 */
+    width: 100%; /* 父容器占满100%的宽度 */
+    box-sizing: border-box; /* 包括边距和内边距在内计算宽度 */
+    margin: 3rem 2rem; /* 上下边距2rem，左右边距3rem */
+
+}
+
+/* 容器样式 */
+.container {
+  z-index: 500; /* 确保按钮在最上层 */
+  width: 18rem; /* 固定宽度为14rem */
+  height:12rem; /* 固定高度为4rem */
+
+  color: #171717; /* 设置文字颜色为深灰色 */
+  position: relative; /* 设置容器为相对定位 */
+  font-family: sans-serif; /* 设置字体为无衬线字体 */
+}
+
+/* .box样式 */
+.container .box {
+  width: 14rem; /* 固定宽度为14rem */
+  height: 8rem; /* 固定高度为4rem */
+  padding: 1rem; /* 内边距1rem */
+  background-color: rgba(255, 255, 255, 0.074); /* 设置背景色为白色带透明度 */
+  border: 1px solid rgba(255, 255, 255, 0.222); /* 设置边框为白色带透明度 */
+  -webkit-backdrop-filter: blur(20px); /* 使用模糊背景效果（针对Safari浏览器） */
+  backdrop-filter: blur(20px); /* 使用模糊背景效果 */
+  border-radius: 0.7rem; /* 设置圆角边框 */
+  transition: all ease 0.3s; /* 设置平滑过渡效果，持续时间为0.3秒 */
+}
+
+/* .box的hover效果 */
+.container .box:hover {
+  box-shadow: 0px 0px 20px 1px #ffbb763f; /* 设置鼠标悬停时的阴影效果 */
+  border: 1px solid rgba(255, 255, 255, 0.454); /* 鼠标悬停时边框的透明度增加 */
+}
+
+/* From Uiverse.io by vinodjangid07 */
+#checkbox {
+  display: none;
+}
+
+.switch {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 3px rgb(2, 2, 2) inset;
+
+  /* 合并居中属性 */
+  margin: 30px auto 10px; /* 上、左右、下的间距 */
+}
+
+.switch svg {
+  width: 1.2em;
+}
+.switch svg path {
+  fill: rgb(48, 48, 48);
+}
+#checkbox:checked + .switch {
+  box-shadow: 0px 0px 1px rgb(151, 243, 255) inset,
+    0px 0px 2px rgb(151, 243, 255) inset, 0px 0px 10px rgb(151, 243, 255) inset,
+    0px 0px 40px rgb(151, 243, 255), 0px 0px 100px rgb(151, 243, 255),
+    0px 0px 5px rgb(151, 243, 255);
+  border: 2px solid rgb(255, 255, 255);
+  background-color: rgb(146, 180, 184);
+}
+#checkbox:checked + .switch svg {
+  filter: drop-shadow(0px 0px 5px rgb(151, 243, 255));
+}
+#checkbox:checked + .switch svg path {
+  fill: rgb(255, 255, 255);
+}
+
+/* From Uiverse.io by vinodjangid07 */
+.input-wrapper {
+  width: 80%;
+  height: 30%;
+  border-radius: 5px;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+
+  /* 使用外边距来调整位置 */
+  margin-top: 50px; /* 上边距 */
+  margin-left: auto; /* 左边距自动，居中 */
+  margin-right: auto; /* 右边距自动，居中 */
+  margin-bottom: 2px; /* 下边距 */
+}
+
+.input {
+  max-width: 65%; /* 输入框最大宽度 */
+  height: 100%; /* 高度填满容器 */
+  border: none;
+  outline: none;
+  padding-left: 15px; /* 左边距 */
+  background-color: #3a3535; /* 更浅的深色背景 */
+  color: white; /* 文字颜色为白色 */
+  font-size: 1em;
+}
+
+
+.Subscribe-btn {
+  height: 100%;
+  width: 30%;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  background-color: #ffffff; /* 按钮背景色为白色 */
+  color: #292524; /* 按钮文字颜色为深色 */
+  font-weight: 500;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s;
+  border: 2px solid #292524; /* 按钮边框颜色与输入框背景一致 */
+}
+
+.arrow {
+  /* 显示箭头 */
+  position: absolute;
+  margin-right: 150px;
+  transition: all 0.3s;
+}
+
+
+
+.Subscribe-btn:hover {
+  color: white; /* 按钮文本颜色为白色 */
+  background-color: rgba(0, 0, 0, 0.1);  /* 略带透明度的背景色 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* 焦点时的阴影效果 */
+}
+
+.Subscribe-btn:hover .arrow {
+  margin-right: 0; /* 悬停时箭头位置改变 */
+  animation: jello-vertical 0.9s both; /* 添加动画效果 */
+  transform-origin: right;
+}
+
+
+
 .panel table {
   border-spacing: 5px 10px;  /* 第一项是水平间距，第二项是垂直间距 */
 }
@@ -257,7 +402,6 @@ form {
         padding: 3%; /* 减小面板内边距 */
     }
    .panels{
-        min-height: 600px; /* 设置最小高度 */
         margin-top: 50px;
     }
 
@@ -274,50 +418,10 @@ form {
         padding: 2%; /* 进一步减小面板内边距 */
     }
    .panels{
-        min-height: 300px; /* 设置最小高度 */
         margin-top: 30px;
     }
 
 }
-@media (max-height: 768px) {
-   .panels{
-        min-height: 600px; /* 设置最小高度 */
-        margin-top: 50px;
-    }
-}
-@media (max-height: 480px) {
-       .panels{
-        min-height: 300px; /* 设置最小高度 */
-        margin-top: 30px;
-    }
-}
 
 
 
-
-/* 设备卡片容器样式 */
-.device-container {
-    display: flex; /* 使用 flex 布局 */
-    flex-wrap: wrap; /* 允许卡片换行 */
-    justify-content: center; /* 卡片居中对齐 */
-    gap: 20px; /* 为卡片之间添加间距 */
-}
-
-/* 单个设备卡片样式 */
-.device-card {
-    background: rgba(255, 255, 255, 0.8); /* 背景半透明 */
-    border: 1px solid #cccccc; /* 设置浅色边框 */
-    border-radius: 10px; /* 设置圆角 */
-    padding: 15px; /* 内边距为15px */
-    width: 200px; /* 固定宽度为200px */
-    height: 200px; /* 固定高度为200px，确保卡片为正方形 */
-    text-align: center; /* 文字居中对齐 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
-    transition: transform 0.3s, box-shadow 0.3s; /* 添加放大和阴影的过渡效果 */
-}
-
-/* 鼠标悬停时的卡片效果 */
-.device-card:hover {
-    transform: scale(1.05); /* 悬停时放大卡片 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 悬停时增加阴影效果 */
-}

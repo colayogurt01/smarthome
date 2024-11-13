@@ -17,7 +17,7 @@
 <article class="tabs">
 
 <!-- 第一个标签页，设备控制，默认选中 -->
-<input checked id="one" name="tabs" type="radio">
+<input id="one" name="tabs" type="radio" value="one">
 <label for="one">设备控制</label>
 
 <!-- 第二个标签页，脚本控制 -->
@@ -44,8 +44,12 @@
 	<div class="panels">
 
 
+    		<!-- 标签页1 -->
 		<div class="panel">
-		    <h2>This is Panel One</h2> <!-- 标签页1的内容标题 -->
+			<h2>This is Panel One</h2> <!-- 标签页1的内容标题 -->
+			<div class="containers" id="device-cards">
+				<!-- 设备卡片将动态添加到这里 -->
+			</div>
 		</div>
 
 		<div class="panel">
@@ -229,6 +233,7 @@
 </article> <!-- 标签式布局结束 -->
 
 <!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
+<script src="../static/Card.js"></script>
 <script src="../static/ConfigBroker.js"></script>
 <script src="../static/DeleteEquipment.js"></script>
 <script src="../static/AddEquipment.js"></script>

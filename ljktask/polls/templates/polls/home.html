@@ -5,20 +5,20 @@
     <meta charset="UTF-8"> <!-- 设置网页的字符编码为UTF-8，确保网页在不同语言下正确显示 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 让网页在不同设备上自适应大小 -->
     <title>智能家居管理系统</title> <!-- 网页标题，显示在浏览器标签页上 -->
-    <link rel="stylesheet" href="../static/home.css"> <!-- 引入外部CSS文件，用于样式管理 -->
+    <link rel="stylesheet" href="../../static/home.css"> <!-- 引入外部CSS文件，用于样式管理 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入jQuery库，简化JavaScript操作 -->
 </head>
 <body>
 <div style="text-align:center;clear:both;"></div> <!-- 设置一个居中的清除浮动的div -->
 <!-- 背景 iframe，保持不变 -->
-<iframe src="../static/background.html" class="background"></iframe> <!-- 嵌入iframe元素，用于背景显示 -->
+<iframe src="../../static/background.html" class="background"></iframe> <!-- 嵌入iframe元素，用于背景显示 -->
 
 <!-- 标签式布局的主要结构 -->
 <article class="tabs">
 
 <!-- 第一个标签页，设备控制，默认选中 -->
 <input id="one" name="tabs" type="radio" value="one">
-<label for="one">设备控制</label>
+<label for="one">My Devices</label>
 
 <!-- 第二个标签页，脚本控制 -->
 <input id="two" name="tabs" type="radio" value="Two">
@@ -30,14 +30,14 @@
 
 <!-- 第四个标签页，设备添加 -->
 <input id="four" name="tabs" type="radio" value="four">
-<label for="four">设备添加</label>
+<label for="four">Device Addition</label>
 
 <!-- 第五个标签页，设备删除 -->
 <input id="five" name="tabs" type="radio" class="tab-switch">
-<label for="five">设备删除</label>
+<label for="five">Device List</label>
 
 <input id="six" name="tabs" type="radio" class="tab-switch">
-<label for="six">BROKER</label>
+<label for="six">Broker</label>
 
 
     <!-- 面板区域，包含各个标签页对应的内容 -->
@@ -46,7 +46,7 @@
 
     		<!-- 标签页1 -->
 		<div class="panel">
-			<h2>This is Panel One</h2> <!-- 标签页1的内容标题 -->
+			<h2>My Devices</h2> <!-- 标签页1的内容标题 -->
 			<div class="containers" id="device-cards">
 				<!-- 设备卡片将动态添加到这里 -->
 			</div>
@@ -63,7 +63,7 @@
 
 		<!-- 第二个标签页内容，设备添加 -->
 		<div class="panel">
-			<h2>设备添加</h2> <!-- 标签页2的内容标题 -->
+			<h2>Device Addition</h2> <!-- 标签页2的内容标题 -->
 
 			<!-- 创建一个表单，用于设备添加，POST请求提交 -->
 			<form action="#" method="POST">
@@ -233,10 +233,10 @@
 </article> <!-- 标签式布局结束 -->
 
 <!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
-<script src="../static/Card.js"></script>
-<script src="../static/ConfigBroker.js"></script>
-<script src="../static/DeleteEquipment.js"></script>
-<script src="../static/AddEquipment.js"></script>
-<script src="../static/home.js"></script>
+<script src="../../static/Card.js"></script>
+<script src="../../static/ConfigBroker.js"></script>
+<script src="../../static/DeleteEquipment.js"></script>
+<script src="../../static/AddEquipment.js"></script>
+<script src="../../static/home.js"></script>
 </body>
 </html>

@@ -34,14 +34,17 @@ ALLOWED_HOSTS = ['192.168.0.188', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
+    'polls',
+    'rest_framework',
     'django.contrib.admin',#管理员站点
     'django.contrib.auth',#认证授权系统
     'django.contrib.contenttypes',#内容类型框架
     'django.contrib.sessions',#会话框架
     'django.contrib.messages',#消息框架
     'django.contrib.staticfiles',#管理静态文件框架
-    'rest_framework',
-    'polls',
+
 ]
 
 MIDDLEWARE = [
@@ -49,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -73,11 +75,29 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ljktask.wsgi.application'
 
+# ASGI 应用配置（用于 WebSocket 和 HTTP）
+ASGI_APPLICATION = 'ljktask.asgi.application'
+
+# 保留 WSGI 配置（如果需要支持传统 HTTP 部署）
+WSGI_APPLICATION = 'ljktask.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],  # 连接到 Redis
+#         },
+#     },
+# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # 使用内存后端
+    },
+}
+
 
 DATABASES = {
     'default': {

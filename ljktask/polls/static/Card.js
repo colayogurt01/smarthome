@@ -1,3 +1,53 @@
+
+
+const socket = new WebSocket('ws://localhost:8000/ws/device_data/');
+
+// 连接成功后发送消息
+socket.onopen = function(event) {
+    console.log("Connected to WebSocket!");
+};
+
+// 接收后端推送的数据
+socket.onmessage = function(event) {
+    try {
+        const data = JSON.parse(event.data);  // 解析 JSON 数据
+        console.log("Received data from backend:", data);
+        const message=data.message;
+
+        const deviceName = message.device_name;
+        const valueName = message.value_name;
+        const value = message[valueName];  // 获取对应变量的值
+
+        console.log("deviceName:", deviceName);
+        console.log("valueName:", valueName);
+        console.log("value:", value);
+
+        // 获取对应的 uniqueId，根据 deviceName 和 value_name 生成
+        const uniqueId = `${deviceName}-${valueName}`;
+        console.log("uniqueId:", uniqueId);
+
+        // 查找页面上的元素并更新值
+        const element = document.getElementById(uniqueId);
+
+        // 如果找到了对应的元素，更新其值
+        if (element) {
+            element.innerText = value;  // 更新页面上的值
+        } else {
+            console.log(`Element with ID ${uniqueId} not found.`);  // 如果没有找到元素，输出警告
+        }
+    } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+    }
+};
+
+
+
+// 连接关闭
+socket.onclose = function(event) {
+    console.log("WebSocket closed");
+};
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // 监听 "设备控制" 标签页的变化（radio input 状态变化）
     $('input[id="one"]').on('change', function() {
@@ -65,38 +115,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 创建接收类型的卡片
-    function createReceiveCard(deviceName, variables, deviceId) {
-        let cardHTML = `
-            <div class="container">
-                <div class="box">
-                    <div class="device name">
-                        <span class="card_title">${deviceName}</span>
-                    </div>
-                    <hr class="line" />
-                    <div>
-                        <div class="icon"></div>
-                        <div class="val">
-        `;
+function createReceiveCard(deviceName, variables, deviceId) {
+    let cardHTML = `
+        <div class="container">
+            <div class="box">
+                <div class="device name">
+                    <span class="card_title">${deviceName}</span>
+                </div>
+                <hr class="line" />
+                <div>
+                    <div class="icon"></div>
+                    <div class="val">
+    `;
 
-        // 遍历当前卡片要显示的变量
-        variables.forEach(variable => {
-            const uniqueId = `${deviceId}-${variable.value_name}`;
-            cardHTML += `
-                <table class="variable-table">
-                    <tr><td>${variable.value_name}</td><td id="${uniqueId}">待更新...</td></tr>
-                </table>
-            `;
-        });
-
+    // 遍历当前卡片要显示的变量
+    variables.forEach(variable => {
+        // 直接使用 deviceName 作为唯一标识符
+        const uniqueId = `${deviceName}-${variable.value_name}`;
         cardHTML += `
-                        </div>
+            <table class="variable-table">
+                <tr><td>${variable.value_name}</td><td id="${uniqueId}">waiting...</td></tr>
+            </table>
+        `;
+    });
+
+    cardHTML += `
                     </div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 
-        return cardHTML;
-    }
+    return cardHTML;
+}
+
 
     // 发送（int、float）卡片
     function createValueCard(deviceName, valueName, deviceId) {

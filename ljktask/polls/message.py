@@ -18,10 +18,8 @@ def get_mqtt_config():
         # 没有找到有效配置时使用默认配置
         print("没有找到有效的 MQTT 服务器配置，使用默认配置。")
         return {
-            'MQTT_BROKER': "localhost",
+            'MQTT_BROKER': "broker.emqx.io",
             'MQTT_PORT': 1883,
-            'MQTT_USERNAME': "MQTT1",
-            'MQTT_PASSWORD': "zdx1314520",
             'MQTT_CLIENT_ID': "default-client-id",
         }
 
@@ -45,18 +43,27 @@ def on_connect(client, userdata, flags, rc):
         print(f"Subscribed to topic: {topic}")
 
 
-
-
 def on_message(client, userdata, msg):
-    # 打印原始消息内容和主题
-    print(f"Received message: {msg.payload.decode()} on topic {msg.topic}")
+    # 解码消息并打印
+    payload = msg.payload.decode()
+    print(f"Received message: {payload} on topic {msg.topic}")
 
     try:
-        # 将接收到的消息解析为 JSON
-        message_data = json.loads(msg.payload.decode())
+        # 尝试将接收到的消息解析为 JSON
+        message_data = json.loads(payload)
+
+        # 确保解析后的数据是字典类型
+        if not isinstance(message_data, dict):
+            print("Error: The message is not a valid JSON object.")
+            return
 
         # 提取设备名
         device_name = message_data.get("device_name")
+
+        # 验证设备名是否为空
+        if not device_name:
+            print("Warning: Device name is missing.")
+            return
 
         # 从 JSON 中提取设备的其他变量（例如温度、湿度等）
         device_variables = {key: value for key, value in message_data.items() if key != "device_name"}
@@ -66,10 +73,13 @@ def on_message(client, userdata, msg):
         print(f"Device Variables: {device_variables}")
 
         # 在这里您可以根据需求进一步处理设备变量，例如存储到数据库等
+
     except json.JSONDecodeError:
         # 如果解码失败，打印错误信息
         print("Failed to decode JSON message.")
-
+    except Exception as e:
+        # 捕获其它异常并打印
+        print(f"Unexpected error: {e}")
 
 # 创建并连接 MQTT 客户端
 
@@ -79,8 +89,11 @@ config = get_mqtt_config()
 # 创建 MQTT 客户端实例
 client = mqtt.Client(client_id=config['MQTT_CLIENT_ID'])
 
-# 设置用户名和密码
-client.username_pw_set(username=config['MQTT_USERNAME'], password=config['MQTT_PASSWORD'])
+
+if config['MQTT_PASSWORD']:  # 如果密码不为空
+    client.username_pw_set(username=config['MQTT_USERNAME'], password=config['MQTT_PASSWORD'])
+else:
+    print("密码为空，不设置用户名和密码")
 
 # 设置连接回调函数
 client.on_connect = on_connect
@@ -89,7 +102,9 @@ client.on_message = on_message
 
 # 连接到 MQTT 服务器
 client.connect(config['MQTT_BROKER'], config['MQTT_PORT'], 60)
-
+print("Connecting to MQTT broker...")
+print(config['MQTT_BROKER'])
+print(config['MQTT_PORT'])
 # 启动事件循环
 client.loop_start()  # 使用 loop_start() 来异步运行
 

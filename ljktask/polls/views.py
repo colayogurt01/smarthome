@@ -14,7 +14,8 @@ from rest_framework import status
 # 本地应用导入
 from .models import Device, DeviceVariable, MqttServer
 from .serializers import MqttServerSerializer
-from .message import client, on_connect  # 导入 MQTT 客户端
+from .message import client, on_connect ,config # 导入 MQTT 客户端
+import paho.mqtt.client as mqtt
 
 
 def login_view(request):
@@ -88,7 +89,7 @@ def add_device(request):
                     value_type=value_type,
                     data_direction=data_direction
                 )
-            on_connect();
+            on_connect()
 
             return JsonResponse({'status': 'success', 'message': 'Device added successfully'}, status=200)
 
@@ -113,7 +114,6 @@ def delete_device(request, device_id):
     if request.method == 'DELETE':
         device = get_object_or_404(Device, id=device_id)
         device.delete()
-        on_connect();
         return JsonResponse({'message': 'Device deleted successfully!'})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
@@ -136,41 +136,77 @@ class MqttServerList(APIView):
         mqtt_server = MqttServer.get_or_create_default_config(data=request.data)
         serializer = MqttServerSerializer(mqtt_server)
         return Response(serializer.data, status=status.HTTP_200_OK)
-#控制设备
-#接受前端发送的数据
-# @api_view(['POST'])
-# def control_device(request):
-#     if request.method == 'POST':
-#         set_subject = "test/topic"#后续升级可以修改
-#         state = request.POST.get('state')
-#         # device_name = request.POST.get('device_name')
-#         if state == "on":
-#             state_value=1;
-#         else:
-#             state_value=0;
-#     #  data = {
-#     #         device_name: {
-#     #                         "temp": temperature,
-#     #                         "humi": humidity
-#     #                     },
-#     #             "version": "1.0.0"
-#     # }
-#         data = {'state': state_value}
-#
-#         json_string = json.dumps(data)
-#         print(json_string)
-#         client.publish(set_subject, json_string)
-#         return Response(data, status=200)
-#     return Response({"error": "Invalid request"}, status=400)  # 处理其他情
+
+
+from django.http import JsonResponse
+from .models import Device
+import json
+
+
+@csrf_exempt  # 如果需要禁用 CSRF 验证
+def set_device_value(request):
+    if request.method == 'POST':
+        try:
+            # 解析请求体
+            data = json.loads(request.body)  # 使用 `request.body` 获取请求体
+
+            # 提取设备 ID 和变量名
+            device_id = data.get('deviceId')
+            value_name = data.get('valueName')
+            value = data.get('value')
+
+            # 验证必需的数据是否存在
+            if not device_id or not value_name or value is None:
+                return JsonResponse({'success': False, 'message': 'Missing required fields'})
+
+            try:
+                # 获取设备信息
+                device = Device.objects.get(id=device_id)
+            except Device.DoesNotExist:
+                return JsonResponse({'success': False, 'message': f'Device with ID {device_id} not found'})
+
+            # 生成设备主题
+            device_topic = device.device_topic
+            # print("Topic:", device_topic)
+
+            # 发布消息
+            publish_message(device_topic, {value_name: value})
+
+            # 成功响应
+            # print("Published message to topic:", device_topic)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON format'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+
+def publish_message(topic, message):
+    """
+    向指定的 MQTT 主题发布消息。
+
+    :param topic: 发布消息的主题
+    :param message: 要发布的消息内容，应该是一个字典或者可转为 JSON 的对象
+    """
+    print("Publishing message to topic:", topic)
+    print("Message:", message)
+    print(topic)
+    print(config['MQTT_BROKER'])
+    print(config['MQTT_PORT'])
+
+    # 将 message 转换为 JSON 字符串
+    message_str = json.dumps(message)
+
+    # 发布消息到指定的主题
+    client.publish(topic, message_str)
 
 
 
 
-#发布消息到MQTT服务器
 
 
-#接受设备消息
-#从MQTT服务器订阅主题
-#监听MQTT服务器的消息
-#这部分在Message.py中
-#使用时回调函数就可以
+
+
+

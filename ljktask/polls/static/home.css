@@ -168,25 +168,24 @@ input[type="radio"] {
 }
 
 /* From Uiverse.io by vinodjangid07 */
-#checkbox {
+input[type="checkbox"] {
   display: none;
 }
 
 .switch {
-  width: 60px;
-  height: 60px;
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background-color: rgb(99, 99, 99);
   border-radius: 50%;
   z-index: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid rgb(126, 126, 126);
   box-shadow: 0px 0px 3px rgb(2, 2, 2) inset;
-
-  /* 合并居中属性 */
-  margin: 50px auto 5px; /* 上、左右、下的间距 */
 }
-
 .switch svg {
   width: 1.2em;
 }
@@ -201,12 +200,15 @@ input[type="radio"] {
   border: 2px solid rgb(255, 255, 255);
   background-color: rgb(146, 180, 184);
 }
-#checkbox:checked + .switch svg {
-  filter: drop-shadow(0px 0px 5px rgb(151, 243, 255));
-}
-#checkbox:checked + .switch svg path {
-  fill: rgb(255, 255, 255);
-}
+/*#checkbox:checked + .switch svg {*/
+/*  filter: drop-shadow(0px 0px 5px rgb(151, 243, 255));*/
+/*}*/
+/*#checkbox:checked + .switch svg path {*/
+/*  fill: rgb(255, 255, 255);*/
+/*}*/
+
+
+
 
 /* From Uiverse.io by vinodjangid07 */
 .input-wrapper {

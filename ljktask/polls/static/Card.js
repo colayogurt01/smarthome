@@ -11,20 +11,20 @@ socket.onopen = function(event) {
 socket.onmessage = function(event) {
     try {
         const data = JSON.parse(event.data);  // 解析 JSON 数据
-        console.log("Received data from backend:", data);
+        // console.log("Received data from backend:", data);
         const message=data.message;
 
         const deviceName = message.device_name;
         const valueName = message.value_name;
         const value = message[valueName];  // 获取对应变量的值
 
-        console.log("deviceName:", deviceName);
-        console.log("valueName:", valueName);
-        console.log("value:", value);
+        // console.log("deviceName:", deviceName);
+        // console.log("valueName:", valueName);
+        // console.log("value:", value);
 
         // 获取对应的 uniqueId，根据 deviceName 和 value_name 生成
         const uniqueId = `${deviceName}-${valueName}`;
-        console.log("uniqueId:", uniqueId);
+        // console.log("uniqueId:", uniqueId);
 
         // 查找页面上的元素并更新值
         const element = document.getElementById(uniqueId);
@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             } else if (variable.value_type === 'bool' && variable.data_direction === 'send') {
                                 let cardHTML = createSendCard(device.device_name, variable.value_name, device.device_id);
                                 cardsContainer.innerHTML += cardHTML;
+
                             }
                         });
 
@@ -185,37 +186,57 @@ function createReceiveCard(deviceName, variables, deviceId) {
 
     // 开关类型的卡片
  // 开关类型的卡片
-    function createSendCard(deviceName, valueName, deviceId) {
-        const uniqueId = `${deviceId}-${valueName}`;
-        console.log(`uniqueId: ${uniqueId}`)
-        console.log(`设备名称: ${deviceName}, 变量名: ${valueName}`);
-        return `
-            <div class="container">
-                <div class="box">
-                    <div class="device name">
-                        <span class="card_title">${deviceName}</span>
-                    </div>
-                    <hr class="line" />
+function createSendCard(deviceName, valueName, deviceId) {
+    const uniqueId = `${deviceId}-${valueName}`;
+    console.log(`uniqueId: ${uniqueId}`);
+    console.log(`设备名称: ${deviceName}, 变量名: ${valueName}`);
 
-                    <div>
-                        <div class="icon">
-                            <label class="switch" for="${uniqueId}">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="slider">
-                                    <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"></path>
-                                </svg>
-                            </label>
-                        <input id="${uniqueId}" type="checkbox" data-device-id="${deviceId}" data-value-name="${valueName}" class="hidden-checkbox" style="display: none;"/>
-
-                        </div>
-                        <div class="val">
-                            <span>${valueName}</span>
-                        </div>
+    const cardHtml = `
+        <div class="container">
+            <div class="box">
+                <div class="device name">
+                    <span class="card_title">${deviceName}</span>
+                </div>
+                <hr class="line" />
+                <div class="icon">
+                       <label class="container1">
+                          <input type="checkbox" id="${uniqueId}" data-device-id="${deviceId}" data-value-name="${valueName}">
+                          <div class="checkmark1">
+                            <svg xml:space="preserve" viewBox="0 0 49.548 49.549" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1">
+                        <g>
+                            <g>
+                                <g>
+                                    <path d="M30.203,4.387v4.385c7.653,2.332,13.238,9.451,13.238,17.857c0,10.293-8.373,18.667-18.667,18.667
+                                        S6.106,36.922,6.106,26.629c0-8.405,5.585-15.525,13.238-17.857V4.387C9.323,6.835,1.855,15.866,1.855,26.629
+                                        c0,12.639,10.281,22.92,22.919,22.92s22.92-10.281,22.92-22.92C47.694,15.865,40.224,6.835,30.203,4.387z"></path>
+                                </g>
+                                <g>
+                                    <path d="M24.776,27.225c-1.41,0-2.554-1.145-2.554-2.555V2.554c0-1.41,1.144-2.554,2.554-2.554c1.41,0,2.554,1.144,2.554,2.554
+                                        V24.67C27.33,26.08,26.186,27.225,24.776,27.225z"></path>
+                                </g>
+                            </g>
+                        </g>
+                        </svg>
+                          </div>
+                        </label>
+                    <div class="val">
+                        <span>${valueName}</span>
                     </div>
                 </div>
             </div>
-        `;
-    }
+        </div>
+    `;
+    /* From Uiverse.io by aadium */
+
+    // 返回渲染好的 HTML 代码
+    return cardHtml;
+}
+
+
 });
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // 监听按钮点击事件
     document.querySelector('#device-cards').addEventListener('click', function (event) {

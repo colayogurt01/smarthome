@@ -16,7 +16,7 @@ from rest_framework import status
 # 本地应用导入
 from .models import Device, DeviceVariable, MqttServer
 from .serializers import MqttServerSerializer
-from .message import client, on_connect, disconnectMqtt, connectMqtt  # 导入 MQTT 客户端功能
+from .message import client, subscribe_device_topics, disconnectMqtt, connectMqtt  # 导入 MQTT 客户端功能
 
 # MQTT 客户端库
 
@@ -143,8 +143,8 @@ def add_device(request):
                     value_type=value_type,
                     data_direction=data_direction
                 )
+            subscribe_device_topics(client)
 
-            client.on_connect = on_connect  # 这里需要设置连接回调函数
             return JsonResponse({'status': 'success', 'message': 'Device added successfully'}, status=200)
 
         except json.JSONDecodeError:
@@ -183,6 +183,7 @@ def delete_device(request, device_id):
         device.delete()
 
         # 返回成功删除的响应
+        subscribe_device_topics(client)
         return JsonResponse({'message': 'Device deleted successfully!'})
 
     # 如果请求方法不是 DELETE，返回错误响应

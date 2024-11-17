@@ -42,8 +42,10 @@ def on_connect(client, userdata, flags, rc):
     # 获取设备的订阅主题
     topics = get_device_subscriptions()
 
+
     # 逐个订阅设备的主题
     for topic in topics:
+        print(f"Subscribing to topic: {topic}")
         client.subscribe(topic)  # 订阅每个设备的主题
         print(f"Subscribed to topic: {topic}")
     if rc == 0:
@@ -51,7 +53,14 @@ def on_connect(client, userdata, flags, rc):
     else:
         print(f"连接失败，返回码 {rc}")
 
-
+def subscribe_device_topics(client):
+    # 这里根据设备信息生成相应的 MQTT 主题
+    # 假设每个设备有一个唯一的 device_id 并且主题遵循 'device/{device_id}/data'
+    topics = get_device_subscriptions()
+    # 逐个订阅设备的主题
+    for topic in topics:
+        print(f"Subscribing to topic: {topic}")
+        client.subscribe(topic)
 def on_disconnect(client, userdata, rc):
     if rc != 0:
         print("断开连接，返回码", rc)

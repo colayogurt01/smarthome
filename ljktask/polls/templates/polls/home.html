@@ -7,6 +7,9 @@
     <title>智能家居管理系统</title> <!-- 网页标题，显示在浏览器标签页上 -->
     <link rel="stylesheet" href="../../static/home.css"> <!-- 引入外部CSS文件，用于样式管理 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入jQuery库，简化JavaScript操作 -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+
 </head>
 <body>
 <div style="text-align:center;clear:both;"></div> <!-- 设置一个居中的清除浮动的div -->
@@ -22,11 +25,11 @@
 
 <!-- 第二个标签页，脚本控制 -->
 <input id="two" name="tabs" type="radio" value="Two">
-<label for="two">脚本控制</label>
+<label for="two">Script</label>
 
 <!-- 第三个标签页，数据统计 -->
 <input id="three" name="tabs" type="radio" value="three">
-<label for="three">数据统计</label>
+<label for="three">Data Statistics</label>
 
 <!-- 第四个标签页，设备添加 -->
 <input id="four" name="tabs" type="radio" value="four">
@@ -53,15 +56,65 @@
 		</div>
 
 		<div class="panel">
-		    <h2>This is Panel two</h2> <!-- 标签页1的内容标题 -->
+		    <h2>Script</h2> <!-- 标签页1的内容标题 -->
+			<div class="Scriptcontainers">
+				<table>
+					<tr>
+						<td>
+							<select id="" name="device">
+								<option value="">Select Device</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td> Select Data Source</td>
+
+						<td>
+							<select id="scriptDeviceSelect" name="device">
+								<option value="">Select Device</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<select id="scriptVariableSelect" name="variable">
+								<option value="">Select Variable</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<button id="addScriptButton">Add Script</button>
+						</td>
+					</tr>
+				</table>
+
+
+			</div>
 		</div>
 
-		<div class="panel">
-		    <h2>This is Panel three</h2> <!-- 标签页1的内容标题 -->
+		<div class="panel" id="panel-three">
+			<h2>Data Statistics</h2>
+			<!-- 标签页3的内容标题 -->
+			<div class="chartcontainers">
+				<table>
+					<tr>
+						<td> Select Data Source</td>
+						<td>
+							<select id="deviceSelect" name="device">
+								<option value="">Select Device</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<select id="variableSelect" name="variable">
+								<option value="">Select Variable</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<button id="addButton">Add Chart</button>
+						</td>
+					</tr>
+				</table>
+
+				<div id="charts-container"></div>
+			</div>
 		</div>
 
 
-		<!-- 第二个标签页内容，设备添加 -->
 		<div class="panel">
 			<h2>Device Addition</h2> <!-- 标签页2的内容标题 -->
 
@@ -233,6 +286,8 @@
 </article> <!-- 标签式布局结束 -->
 
 <!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
+
+<script src="../../static/chart.js"></script>
 <script src="../../static/Card.js"></script>
 <script src="../../static/ConfigBroker.js"></script>
 <script src="../../static/DeleteEquipment.js"></script>

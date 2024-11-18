@@ -15,10 +15,10 @@ from rest_framework import status
 
 # 本地应用导入
 from .models import Device, DeviceVariable, MqttServer
+from .models import ConditionScript,  TimerScript
 from .serializers import MqttServerSerializer
-from .message import client, subscribe_device_topics, disconnectMqtt, connectMqtt  # 导入 MQTT 客户端功能
+from .message import client, subscribe_device_topics, disconnectMqtt, connectMqtt ,publish_message,start_all_timers,stop_all_timers# 导入 MQTT 客户端功能
 
-# MQTT 客户端库
 
 
 # 作者: cola yogurt
@@ -144,6 +144,7 @@ def add_device(request):
                     data_direction=data_direction
                 )
             subscribe_device_topics(client)
+            print("Device")
 
             return JsonResponse({'status': 'success', 'message': 'Device added successfully'}, status=200)
 
@@ -295,29 +296,127 @@ def set_device_value(request):
 
 # 作者: cola yogurt
 
-def publish_message(topic, message):
-    """
-    向指定的 MQTT 主题发布消息。
-
-    :param topic: 发布消息的主题
-    :param message: 要发布的消息内容，应该是一个字典或者可转为 JSON 的对象
-    """
-    # 打印调试信息，输出发布的主题和消息
-    print("Publishing message to topic:", topic)
-    print("Message:", message)
-
-    # 将消息内容转换为 JSON 格式的字符串
-    message_str = json.dumps(message)
-
-    # 使用 MQTT 客户端发布消息到指定主题
-    client.publish(topic, message_str)
 
 
 
+# views.py
 
 
 
+@csrf_exempt
+def add_condition_script(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
 
+        # 使用设备名称代替设备 ID 来查找设备实例
+        date_source_device = Device.objects.get(device_name=data['condition_device'])
+        execute_device = Device.objects.get(device_name=data['performer_device'])
 
+        # 创建 ConditionScript 实例并保存
+        condition_script = ConditionScript(
+            date_source_device_name=date_source_device,  # 使用设备实例
+            date_source_variable_name=data['condition_variable'],
+            condution_operator=data['condition_operator'],
+            condition_value=data['condition_value'],
+            execute_device_name=execute_device,  # 使用设备实例
+            execute_variable_name=data['control_variable'],
+            execute_device_value=data['script_value']
+        )
 
+        # 打印数据并保存到数据库
+        print(data)
+        condition_script.save()
 
+        return JsonResponse({'message': 'Condition Script added successfully'})
+
+@csrf_exempt
+def add_timer_script(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        # 使用设备名称代替设备 ID 来查找设备实例
+        execute_device = Device.objects.get(device_name=data['performer_device'])
+
+        # 创建 TimerScript 实例并保存
+        timer_script = TimerScript(
+            timer_type=data['timer_type'],
+            timer_value=data['timer_condition_value'],
+            execute_device_name=execute_device,  # 使用设备实例
+            execute_variable_name=data['control_variable'],
+            execute_device_value=data['timer_script_value']
+        )
+
+        # 保存定时脚本
+        timer_script.save()
+        stop_all_timers()
+        start_all_timers()
+        return JsonResponse({'message': 'Timer Script added successfully'})
+
+def get_condition_scripts(request):
+    # 获取所有 ConditionScript 条目
+    condition_scripts = ConditionScript.objects.all()
+
+    data = []
+    for script in condition_scripts:
+        # 获取每个 ConditionScript 实例的相关数据
+        data.append({
+            'device_id': script.id,  # 使用数据库的主键作为 device_id
+            'device_name': script.date_source_device_name,
+            'condition_variable': script.date_source_variable_name,
+            'condition_operator': script.condution_operator,
+            'condition_value': script.condition_value,
+            'execute_device_name': script.execute_device_name,
+            'execute_variable_name': script.execute_variable_name,
+            'execute_value': script.execute_device_value,
+        })
+
+    # 返回 JSON 格式的数据
+    return JsonResponse({'condition_scripts': data})
+
+@csrf_exempt  # 如果使用了 CSRF Token 防护，请确保装饰器
+def delete_condition_script(request, device_id):
+    if request.method == 'DELETE':
+        try:
+            # 获取并删除相应的条件脚本
+            condition_script = ConditionScript.objects.get(id=device_id)  # 使用 id 而非 device_id
+            condition_script.delete()
+            return JsonResponse({'success': True})
+        except ConditionScript.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Condition script not found'}, status=404)
+
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=400)
+
+def get_timer_scripts(request):
+    # 获取所有 TimerScript 条目
+    timer_scripts = TimerScript.objects.all()
+
+    data = []
+    for script in timer_scripts:
+        # 获取每个 TimerScript 实例的相关数据
+        data.append({
+            'device_id': script.id,  # 使用数据库的主键作为 device_id
+            'timer_type': script.timer_type,
+            'timer_value': script.timer_value,
+            'execute_device_name': script.execute_device_name,
+            'execute_variable_name': script.execute_variable_name,
+            'execute_device_value': script.execute_device_value,
+        })
+
+    # 返回 JSON 格式的数据
+    return JsonResponse({'timer_scripts': data})
+
+@csrf_exempt  # 如果使用了 CSRF Token 防护，请确保装饰器
+def delete_timer_script(request, device_id):
+    if request.method == 'DELETE':
+        try:
+            # 获取并删除相应的定时器脚本
+            timer_script = TimerScript.objects.get(id=device_id)  # 使用 id 而非 device_id
+            timer_script.delete()
+            stop_all_timers()
+            start_all_timers()
+
+            return JsonResponse({'success': True})
+        except TimerScript.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Timer script not found'}, status=404)
+
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=400)

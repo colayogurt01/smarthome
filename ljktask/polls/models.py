@@ -4,6 +4,7 @@ import uuid
 import hashlib
 import time
 from django.db import models
+import threading
 
 class Device(models.Model):
     id = models.AutoField(primary_key=True)  # 自动生成唯一的设备 ID
@@ -45,6 +46,45 @@ class DeviceVariable(models.Model):
     def __str__(self):
         return f"{self.value_name} ({self.value_type})"
 
+# 条件脚本模型（用于设备状态和其他条件）
+class ConditionScript(models.Model):
+    date_source_device_name = models.CharField(max_length=100, default='Unknown Device')  # 触发条件的设备名称，默认值为 'Unknown Device'
+    date_source_variable_name = models.CharField(max_length=100, default='Unknown Variable')  # 触发条件的设备变量名称，默认值为 'Unknown Variable'
+    condution_operator = models.CharField(
+        max_length=20,
+        choices=[('equal', 'Equal'),
+                 ('greater_than', 'Greater Than'),
+                 ('less_than', 'Less Than'),
+                 ('not_equal', 'Not Equal')],
+        default='equal'  # 默认值为 'equal'
+    )  # 比较运算符
+    condition_value = models.FloatField(default=0.0)  # 条件值，默认值为 0.0
+    execute_device_name = models.CharField(max_length=100, default='Unknown Performer')  # 执行脚本的设备名称，默认值为 'Unknown Performer'
+    execute_variable_name = models.CharField(max_length=100, default='Unknown Variable')  # 控制变量，默认值为 'Unknown Variable'
+    execute_device_value = models.CharField(max_length=100, default='Unknown Value')  # 执行设备的执行变量，默认值为 'Unknown Value'
+
+    def __str__(self):
+        return f"Condition Script for {self.date_source_device_name}"
+
+
+# 定时器脚本模型
+class TimerScript(models.Model):
+    timer_type = models.CharField(
+        max_length=50,
+        choices=[('after_num_seconds', 'After num Seconds'),
+                 ('every_num_seconds', 'Every num Seconds'),
+                 ('after_num_minutes', 'After num Minutes'),
+                 ('every_num_minutes', 'Every num Minutes')],
+        default='after_num_seconds'  # 默认值为 'after_num_seconds'
+    )  # 定时器类型
+    timer_value = models.IntegerField(default=0)  # 定时器的时间，默认值为 0
+    execute_device_name = models.CharField(max_length=100, default='Unknown Performer')  # 执行脚本的设备名称，默认值为 'Unknown Performer'
+    execute_variable_name = models.CharField(max_length=100, default='Unknown Variable')  # 控制变量，默认值为 'Unknown Variable'
+    execute_device_value = models.CharField(max_length=100, default='Unknown Value')  # 执行设备的执行变量，默认值为 'Unknown Value'
+    thread = models.BooleanField(default=False)  # 这里是新增的线程字段
+
+    def __str__(self):
+        return f"Timer Script for {self.execute_device_name}"
 
 
 class MqttServer(models.Model):

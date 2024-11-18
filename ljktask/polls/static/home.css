@@ -37,8 +37,8 @@ main {
 body {
     font-family: Cambria, Arial; /* 使用 Cambria 或 Arial 字体 */
     background: transparent; /* 设置背景为透明 */
-    margin: 0; /* 移除外边距 */
-    padding: 0; /* 移除内边距 */
+    margin-left: 80px; /* 左边距 */
+    margin-right: 80px; /* 右边距 */
     display: flex; /* 使用 flex 布局 */
     flex-direction: column; /* 将内容按列方向排列 */
     align-items: center; /* 水平居中对齐 */
@@ -102,7 +102,6 @@ input[type="radio"] {
 
 /* 面板容器样式 */
 .panels {
-
     clear: both; /* 清除浮动 */
     position: relative; /* 相对定位 */
     width: 100%; /* 宽度为100% */
@@ -111,12 +110,11 @@ input[type="radio"] {
     border-radius: 10px; /* 设置圆角 */
     box-sizing: border-box; /* 包括内边距在内的总宽度计算 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* 添加模糊阴影效果 */
-    margin-top: 100px; /* 添加 80px 的上外边距 */
+    margin-top: 100px; /* 添加 100px 的上外边距 */
     backdrop-filter: blur(4px); /* 背景模糊效果 */
     z-index: 5; /* 确保面板容器位于最前面 */
-
-
 }
+
 
 
 /* 面板样式 */
@@ -384,14 +382,14 @@ input[type="radio"] {
   margin-right: 0; /* 悬停时箭头位置改变 */
   animation: jello-vertical 0.9s both; /* 添加动画效果 */
   transform-origin: right;
+
 }
 
 
 
 .panel table {
-  /*z-index: 5; !* 确保按钮在最上层 *!*/
-
   border-spacing: 5px 10px;  /* 第一项是水平间距，第二项是垂直间距 */
+  margin: 0 auto;  /* 将表格水平居中 */
 }
 
 .panel input[type=text], input[type=number], input[type=password], select {
@@ -404,7 +402,8 @@ input[type="radio"] {
     float: left;
     margin-right: 2%; /* 右边距2px */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加模糊阴影效果 */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s ease,
+    box-shadow 0.3s ease;
     border-radius: 4px; /* 设置圆角 */
 
 }
@@ -492,23 +491,62 @@ input[type="radio"] {
 }
 
 .panel button:hover {
-
   color: white;  /* 设置文字颜色为白色 */
-  padding:9px 13px;  /* 增加按钮的垂直内边距至 14px，保持水平内边距为 20px */
+  padding: 8.5px 12.5px;  /* 增加按钮的垂直内边距至 8.5px，保持水平内边距为 12.5px */
   margin: 8px 0;  /* 保持按钮的外边距为上下 8px，左右 0 */
-  border-radius: 4px;  /* 保持圆角样式 */
+  border-radius: 4px;  /* 设置圆角样式 */
   background-color: rgba(0, 0, 0, 0.05);  /* 略带透明度的背景色 */
-
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 添加模糊阴影效果 */
+  transition: box-shadow 0.3s ease; /* 添加过渡效果 */
 }
 
 
 
+/* 表格样式 */
+table {
+  border-collapse: collapse;  /* 合并单元格边框 */
+  margin-bottom: 20px;  /* 表格底部的间距 */
+  background-color: transparent;  /* 设置表格背景为透明 */
+  width: auto;  /* 表格宽度自动 */
+  margin-left: 0px;  /* 将表格对齐到左侧 */
+  display: block;  /* 设置表格为块级元素，确保表格可以靠左显示 */
+}
 
+/* 表格的单元格边框和填充 */
+td, th {
+  padding: 10px;  /* 设置单元格内边距 */
+  vertical-align: middle;  /* 垂直居中 */
+  text-align: center;  /* 水平居中文字 */
+  background-color: transparent;  /* 设置单元格背景为透明 */
+}
+
+/* 表头的样式 */
+th {
+  color: black;  /* 表头文字颜色 */
+  font-weight: bold;  /* 加粗字体 */
+  text-align: center;  /* 表头文字居中对齐 */
+}
+
+/* 设置表格的行背景色 */
+tr:nth-child(odd) {
+  background-color: transparent;  /* 奇数行背景色透明 */
+}
+
+tr:nth-child(even) {
+  background-color: transparent;  /* 偶数行背景色透明 */
+}
+
+/* 鼠标悬停在行上的效果 */
+tr:hover {
+  background-color: transparent;  /* 悬停时行背景色透明 */
+}
 
 /* Form样式 */
 form {
     position: relative;               /* 确保表单布局 */
     z-index: 1;                      /* 设置 z-index 确保表单在顶层 */
+    margin: 0 auto;  /* 将表格水平居中 */
+
 }
 
 /* 响应式布局，当宽度小于 768px 时 */

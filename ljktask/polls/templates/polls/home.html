@@ -60,28 +60,104 @@
 			<div class="Scriptcontainers">
 				<table>
 					<tr>
+						<td> IF </td>
 						<td>
-							<select id="" name="device">
-								<option value="">Select Device</option> <!-- 默认选项 -->
+							<select id="ConditionDeviceSelect" name="condition_type">
+								<option value="">Select Device</option>
+								<!-- 动态加载设备 -->
 							</select>
 						</td>
-						<td> Select Data Source</td>
+						<td>
+							<select id="ConditionVariableSelect" name="condition_variable">
+								<option value="">Select Variable</option>
+								<!-- 根据设备加载的变量 -->
+							</select>
+						</td>
+						<td>
+							<select id="ConditionVariable" name="condition_operator">
+								<option value="">Select Operator</option>
+								<option value="equal">Equal</option>
+								<option value="greater_than">Greater Than</option>
+								<option value="less_than">Less Than</option>
+								<option value="not_equal">Not Equal</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" id="ConditionValue" name="condition_value" placeholder="Value" />
+						</td>
+						<td> SO </td>
+						<td>
+							<select id="scriptDeviceSelect" name="performer_device">
+								<option value="">Select Performer</option>
+								<!-- 动态加载执行设备 -->
+							</select>
+						</td>
+						<td>
+							<select id="scriptVariableSelect" name="control_variable">
+								<option value="">Select Control Variable</option>
+								<!-- 动态加载控制变量 -->
+							</select>
+						</td>
+						<td>
+							<input type="text" id="ScriptValue" name="script_value" placeholder="Script Value" />
+						</td>
+						<td>
+							 <button type="button" id="submitConditionScript" onclick="submitConditionScript()">Add Script</button>
 
-						<td>
-							<select id="scriptDeviceSelect" name="device">
-								<option value="">Select Device</option> <!-- 默认选项 -->
-							</select>
-						</td>
-						<td>
-							<select id="scriptVariableSelect" name="variable">
-								<option value="">Select Variable</option> <!-- 默认选项 -->
-							</select>
-						</td>
-						<td>
-							<button id="addScriptButton">Add Script</button>
 						</td>
 					</tr>
+
+					<tbody id="conditionScriptTableBody">
+						<!-- 动态加载的表格内容 -->
+					</tbody>
 				</table>
+
+
+			<!-- Timer Script Form -->
+
+
+				<table>
+					<tr>
+						<td>IF</td>
+						<td>
+							<select id="TimerType" name="timer_type">
+								<option value="">Select Timer</option>
+								<option value="after_num_seconds">After num Seconds</option>
+								<option value="every_num_seconds">Every num Seconds</option>
+								<option value="after_num_minutes">After num minutes</option>
+								<option value="every_num_minutes">Every num minutes</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" id="TimerConditionValue" name="timer_condition_value" placeholder="Timer Value" />
+						</td>
+						<td>SO</td>
+						<td>
+							<select id="TimerScriptDeviceSelect" name="timer_performer_device">
+								<option value="">Select Performer</option>
+								<!-- 动态加载执行设备 -->
+							</select>
+						</td>
+						<td>
+							<select id="TimerScriptVariableSelect" name="timer_control_variable">
+								<option value="">Select Control Variable</option>
+								<!-- 动态加载控制变量 -->
+							</select>
+						</td>
+						<td>
+							<input type="text" id="TimerScriptValue" name="timer_script_value" placeholder="Script Value" />
+						</td>
+						<td>
+							 <button type="button" id="submitTimerScript" onclick="submitTimerScript()">Add Script</button>
+						</td>
+					</tr>
+					<tbody id="timerScriptTableBody">
+						<!-- Timer scripts will be dynamically loaded here -->
+					</tbody>
+				</table>
+
+
+
 
 
 			</div>
@@ -255,38 +331,11 @@
     </form>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	</div> <!-- 面板结束 -->
 </article> <!-- 标签式布局结束 -->
 
 <!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
-
+<script src="../../static/Script.js"></script>
 <script src="../../static/chart.js"></script>
 <script src="../../static/Card.js"></script>
 <script src="../../static/ConfigBroker.js"></script>

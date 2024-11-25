@@ -1,0 +1,25 @@
+/* 容器样式 */
+.container {
+  color: #171717; /* 设置文字颜色为深灰色 */
+  position: relative; /* 设置容器为相对定位 */
+  font-family: sans-serif; /* 设置字体为无衬线字体 */
+}
+
+/* .box样式 */
+.container .box {
+  width: 14rem; /* 固定宽度为14rem */
+  height: 4rem; /* 固定高度为4rem */
+  padding: 1rem; /* 内边距1rem */
+  background-color: rgba(255, 255, 255, 0.074); /* 设置背景色为白色带透明度 */
+  border: 1px solid rgba(255, 255, 255, 0.222); /* 设置边框为白色带透明度 */
+  -webkit-backdrop-filter: blur(20px); /* 使用模糊背景效果（针对Safari浏览器） */
+  backdrop-filter: blur(20px); /* 使用模糊背景效果 */
+  border-radius: 0.7rem; /* 设置圆角边框 */
+  transition: all ease 0.3s; /* 设置平滑过渡效果，持续时间为0.3秒 */
+}
+
+/* .box的hover效果 */
+.container .box:hover {
+  box-shadow: 0px 0px 20px 1px #ffbb763f; /* 设置鼠标悬停时的阴影效果 */
+  border: 1px solid rgba(255, 255, 255, 0.454); /* 鼠标悬停时边框的透明度增加 */
+}

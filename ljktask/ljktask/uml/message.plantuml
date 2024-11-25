@@ -1,0 +1,39 @@
+@startuml
+actor User
+participant MqttServer
+participant MQTTClient
+participant Device
+participant TimerScript
+participant ConditionScript
+participant ChannelLayer
+
+User -> MQTTClient : Connect to MQTT broker
+MQTTClient -> MqttServer : Get MQTT config
+MqttServer -> MQTTClient : Return config
+MQTTClient -> MQTTClient : Connect to MQTT broker
+MQTTClient -> MQTTClient : Start loop
+MQTTClient -> MQTTClient : Subscribe device topics
+MQTTClient -> Device : Fetch device subscriptions
+Device -> MQTTClient : Return subscriptions
+MQTTClient -> MQTTClient : Subscribe to each device topic
+
+MQTTClient -> MQTTClient : On message received
+MQTTClient -> Device : Fetch device variables
+Device -> MQTTClient : Return device variables
+MQTTClient -> Device : Fetch device data
+Device -> MQTTClient : Return device data
+MQTTClient -> ChannelLayer : Send data to WebSocket
+ChannelLayer -> User : Send data to frontend
+
+MQTTClient -> ConditionScript : Fetch conditions
+ConditionScript -> MQTTClient : Return conditions
+MQTTClient -> Device : Fetch device values
+Device -> MQTTClient : Return device values
+MQTTClient -> MQTTClient : Evaluate conditions
+MQTTClient -> TimerScript : Check timer tasks
+TimerScript -> MQTTClient : Return timer tasks
+MQTTClient -> MQTTClient : Execute action based on timer
+MQTTClient -> MQTTClient : Publish message if condition met
+MQTTClient -> Device : Send MQTT message
+
+@enduml

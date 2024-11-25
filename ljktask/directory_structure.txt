@@ -1,0 +1,31 @@
+卷 OS 的文件夹 PATH 列表
+卷序列号为 F046-B478
+C:.
+│  db.sqlite3
+│  directory_structure.txt
+│  manage.py
+│  
+├─ljktask
+│  │  asgi.py
+│  │  settings.py
+│  │  urls.py
+│  │  wsgi.py
+│  │  __init__.py
+│  │  
+│  └─__pycache__
+│          settings.cpython-312.pyc
+│          urls.cpython-312.pyc
+│          wsgi.cpython-312.pyc
+│          __init__.cpython-312.pyc
+│          
+└─polls
+    │  admin.py
+    │  apps.py
+    │  models.py
+    │  tests.py
+    │  views.py
+    │  __init__.py
+    │  
+    └─migrations
+            __init__.py
+            

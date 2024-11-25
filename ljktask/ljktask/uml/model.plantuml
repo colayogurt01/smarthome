@@ -1,0 +1,59 @@
+@startuml
+
+class Device {
+  - id: int
+  - device_name: str
+  - device_topic: str
+  - client_id: str
+  + __str__(): str
+  + generate_mqtt_client_id(): str
+  + save(): None
+}
+
+class DeviceVariable {
+  - value_name: str
+  - value_type: str
+  - data_direction: str
+  + __str__(): str
+}
+
+class ConditionScript {
+  - date_source_device_name: str
+  - date_source_variable_name: str
+  - condution_operator: str
+  - condition_value: float
+  - execute_device_name: str
+  - execute_variable_name: str
+  - execute_device_value: str
+  + __str__(): str
+}
+
+class TimerScript {
+  - timer_type: str
+  - timer_value: int
+  - execute_device_name: str
+  - execute_variable_name: str
+  - execute_device_value: str
+  - thread: bool
+  + __str__(): str
+}
+
+class MqttServer {
+  - server_address: str
+  - port: int
+  - username: str
+  - password: str
+  - client_id: str
+  - last_modified: DateTime
+  - is_connected: bool
+  + __str__(): str
+  + check_connection(): bool
+  + get_or_create_default_config(data: dict): MqttServer
+}
+
+Device "1" -- "0..*" DeviceVariable : contains
+Device "1" -- "1" MqttServer : connects to
+ConditionScript "1" -- "1" Device : controls
+TimerScript "1" -- "1" Device : controls
+
+@enduml

@@ -1,0 +1,105 @@
+body {
+    font-family: Cambria, Arial;
+    background: transparent; /* Set the background to transparent */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tabs {
+    width: 100%;
+    height: 100%;
+    margin: 50px auto;
+    padding: 0 15px; /* 留出内边距 */
+    box-sizing: border-box;
+}
+
+input {
+    opacity: 0;
+}
+
+label {
+    cursor: pointer;
+    background: -webkit-linear-gradient(#666, #555);
+    color: #eee;
+    border-radius: 5px 5px 0 0;
+    padding: 1.5% 3%;
+    float: left;
+    margin-right: 2px;
+    font: italic 1em Cambria;
+    transition: background 0.3s ease; /* 平滑过渡效果 */
+}
+
+label:hover {
+    background: -webkit-linear-gradient(#777, #666);
+}
+
+input:checked + label {
+    background: #fff;
+    color: #333;
+}
+
+.tabs input:nth-of-type(1):checked ~ .panels .panel:first-child,
+.tabs input:nth-of-type(2):checked ~ .panels .panel:nth-child(2),
+.tabs input:nth-of-type(3):checked ~ .panels .panel:nth-child(3),
+.tabs input:nth-of-type(4):checked ~ .panels .panel:last-child {
+    opacity: 1;
+    -webkit-transition: .3s;
+}
+
+.panels {
+    clear: both;
+    position: relative;
+    width: 100%;
+    height: 80%;
+    background: transparent; /* Set the background to transparent */
+    border-radius: 0 10px 10px 10px;
+    min-height: 600px;
+    box-sizing: border-box;
+}
+
+.panel {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    background: transparent; /* Set the background to transparent */
+    border-radius: 0 10px 10px 10px;
+    padding: 4%;
+    box-sizing: border-box;
+}
+
+.panel h2 {
+    margin: 0;
+    font-family: Arial;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .tabs {
+        max-width: 100%; /* 在小屏幕上，允许 tabs 宽度填满屏幕 */
+        padding: 0 10px;
+    }
+
+    label {
+        font-size: 0.9em; /* 减小文字大小以适应小屏幕 */
+        padding: 10px;
+    }
+
+    .panel {
+        padding: 3%; /* 减小面板内边距 */
+    }
+}
+
+@media (max-width: 480px) {
+    label {
+        font-size: 0.8em; /* 在非常小的屏幕上进一步缩小 */
+        padding: 8px;
+    }
+
+    .panel {
+        padding: 2%; /* 进一步减小面板内边距 */
+    }
+}

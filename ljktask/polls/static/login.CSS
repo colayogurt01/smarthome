@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif; /* 字体为Arial，后备为无衬线字体 */
+    background-color: #f4f4f4; /* 背景颜色为浅灰色 */
+    display: flex; /* 使用Flexbox布局 */
+    justify-content: center; /* 水平居中对齐内容 */
+    align-items: center; /* 垂直居中对齐内容 */
+    height: 100vh; /* 页面高度为100%视口高度 */
+    margin: 0; /* 去掉默认外边距 */
+}
+.container {
+    background-color: white; /* 背景为白色 */
+    padding: 20px; /* 内部添加20px的内边距 */
+    border-radius: 8px; /* 边角圆润，半径为8px */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加轻微阴影效果 */
+    width: 300px; /* 容器宽度为300px */
+}
+h2 {
+    margin-bottom: 20px; /* 标题下方添加20px的外边距 */
+}
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%; /* 输入框宽度为100% */
+    padding: 10px; /* 添加10px内边距 */
+    margin: 10px 0; /* 上下各添加10px的外边距 */
+    border: 1px solid #ccc; /* 边框为1px的浅灰色 */
+    border-radius: 4px; /* 边角圆润，半径为4px */
+}
+button {
+    width: 100%; /* 按钮宽度为100% */
+    padding: 10px; /* 添加10px内边距 */
+    background-color: #28a745; /* 按钮背景色为绿色 */
+    color: white; /* 字体颜色为白色 */
+    border: none; /* 去掉边框 */
+    border-radius: 4px; /* 边角圆润，半径为4px */
+    cursor: pointer; /* 鼠标悬停时显示为手指形状 */
+}
+button:hover {
+    background-color: #218838; /* 鼠标悬停时按钮背景色变为深绿色 */
+}
+.switch-form {
+    margin-top: 10px; /* 上方添加10px的外边距 */
+    text-align: center; /* 文本居中对齐 */
+}

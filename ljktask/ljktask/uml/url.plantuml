@@ -1,0 +1,32 @@
+
+@startuml
+
+class HomeController {
+    + home_view()
+    + login_view()
+}
+
+class DeviceManager {
+    + add_device()
+    + delete_device(device_id: int)
+    + get_device_list()
+}
+
+class MqttServerManager {
+    + mqtt_server_list()
+}
+
+class ScriptManager {
+    + add_condition_script()
+    + add_timer_script()
+    + get_condition_scripts()
+    + get_timer_scripts()
+    + delete_condition_script(device_id: str)
+    + delete_timer_script(device_id: int)
+}
+
+HomeController -> DeviceManager : Manages device-related routes
+HomeController -> MqttServerManager : Manages MQTT server routes
+HomeController -> ScriptManager : Manages script-related routes
+
+@enduml

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta name="csrf-token" content="{{ csrf_token }}">
+    <meta charset="UTF-8"> <!-- 设置网页的字符编码为UTF-8，确保网页在不同语言下正确显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 让网页在不同设备上自适应大小 -->
+    <title>智能家居管理系统</title> <!-- 网页标题，显示在浏览器标签页上 -->
+    <link rel="stylesheet" href="../../static/home.css"> <!-- 引入外部CSS文件，用于样式管理 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入jQuery库，简化JavaScript操作 -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+
+</head>
+<body>
+<div style="text-align:center;clear:both;"></div> <!-- 设置一个居中的清除浮动的div -->
+<!-- 背景 iframe，保持不变 -->
+<iframe src="../../static/background.html" class="background"></iframe> <!-- 嵌入iframe元素，用于背景显示 -->
+
+<!-- 标签式布局的主要结构 -->
+<article class="tabs">
+
+<!-- 第一个标签页，设备控制，默认选中 -->
+<input id="one" name="tabs" type="radio" value="one">
+<label for="one">My Devices</label>
+
+<!-- 第二个标签页，脚本控制 -->
+<input id="two" name="tabs" type="radio" value="Two">
+<label for="two">Script</label>
+
+<!-- 第三个标签页，数据统计 -->
+<input id="three" name="tabs" type="radio" value="three">
+<label for="three">Data Statistics</label>
+
+<!-- 第四个标签页，设备添加 -->
+<input id="four" name="tabs" type="radio" value="four">
+<label for="four">Device Addition</label>
+
+<!-- 第五个标签页，设备删除 -->
+<input id="five" name="tabs" type="radio" class="tab-switch">
+<label for="five">Device List</label>
+
+<input id="six" name="tabs" type="radio" class="tab-switch">
+<label for="six">Broker</label>
+
+
+    <!-- 面板区域，包含各个标签页对应的内容 -->
+	<div class="panels">
+
+
+    		<!-- 标签页1 -->
+		<div class="panel">
+			<h2>My Devices</h2> <!-- 标签页1的内容标题 -->
+			<div class="containers" id="device-cards">
+				<!-- 设备卡片将动态添加到这里 -->
+			</div>
+		</div>
+
+		<div class="panel">
+		    <h2>Script</h2> <!-- 标签页1的内容标题 -->
+			<div class="Scriptcontainers">
+				<table>
+					<tr>
+						<td> IF </td>
+						<td>
+							<select id="ConditionDeviceSelect" name="condition_type">
+								<option value="">Select Device</option>
+								<!-- 动态加载设备 -->
+							</select>
+						</td>
+						<td>
+							<select id="ConditionVariableSelect" name="condition_variable">
+								<option value="">Select Variable</option>
+								<!-- 根据设备加载的变量 -->
+							</select>
+						</td>
+						<td>
+							<select id="ConditionVariable" name="condition_operator">
+								<option value="">Select Operator</option>
+								<option value="equal">Equal</option>
+								<option value="greater_than">Greater Than</option>
+								<option value="less_than">Less Than</option>
+								<option value="not_equal">Not Equal</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" id="ConditionValue" name="condition_value" placeholder="Value" />
+						</td>
+						<td> SO </td>
+						<td>
+							<select id="scriptDeviceSelect" name="performer_device">
+								<option value="">Select Performer</option>
+								<!-- 动态加载执行设备 -->
+							</select>
+						</td>
+						<td>
+							<select id="scriptVariableSelect" name="control_variable">
+								<option value="">Select Control Variable</option>
+								<!-- 动态加载控制变量 -->
+							</select>
+						</td>
+						<td>
+							<input type="text" id="ScriptValue" name="script_value" placeholder="Script Value" />
+						</td>
+						<td>
+							 <button type="button" id="submitConditionScript" onclick="submitConditionScript()">Add Script</button>
+
+						</td>
+					</tr>
+
+					<tbody id="conditionScriptTableBody">
+						<!-- 动态加载的表格内容 -->
+					</tbody>
+				</table>
+
+
+			<!-- Timer Script Form -->
+
+
+				<table>
+					<tr>
+						<td>IF</td>
+						<td>
+							<select id="TimerType" name="timer_type">
+								<option value="">Select Timer</option>
+								<option value="after_num_seconds">After num Seconds</option>
+								<option value="every_num_seconds">Every num Seconds</option>
+								<option value="after_num_minutes">After num minutes</option>
+								<option value="every_num_minutes">Every num minutes</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" id="TimerConditionValue" name="timer_condition_value" placeholder="Timer Value" />
+						</td>
+						<td>SO</td>
+						<td>
+							<select id="TimerScriptDeviceSelect" name="timer_performer_device">
+								<option value="">Select Performer</option>
+								<!-- 动态加载执行设备 -->
+							</select>
+						</td>
+						<td>
+							<select id="TimerScriptVariableSelect" name="timer_control_variable">
+								<option value="">Select Control Variable</option>
+								<!-- 动态加载控制变量 -->
+							</select>
+						</td>
+						<td>
+							<input type="text" id="TimerScriptValue" name="timer_script_value" placeholder="Script Value" />
+						</td>
+						<td>
+							 <button type="button" id="submitTimerScript" onclick="submitTimerScript()">Add Script</button>
+						</td>
+					</tr>
+					<tbody id="timerScriptTableBody">
+						<!-- Timer scripts will be dynamically loaded here -->
+					</tbody>
+				</table>
+
+
+
+
+
+			</div>
+		</div>
+
+		<div class="panel" id="panel-three">
+			<h2>Data Statistics</h2>
+			<!-- 标签页3的内容标题 -->
+			<div class="chartcontainers">
+				<table>
+					<tr>
+						<td> Select Data Source</td>
+						<td>
+							<select id="deviceSelect" name="device">
+								<option value="">Select Device</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<select id="variableSelect" name="variable">
+								<option value="">Select Variable</option> <!-- 默认选项 -->
+							</select>
+						</td>
+						<td>
+							<button id="addButton">Add Chart</button>
+						</td>
+					</tr>
+				</table>
+
+				<div id="charts-container"></div>
+			</div>
+		</div>
+
+
+		<div class="panel">
+			<h2>Device Addition</h2> <!-- 标签页2的内容标题 -->
+
+			<!-- 创建一个表单，用于设备添加，POST请求提交 -->
+			<form action="#" method="POST">
+				{% csrf_token %}
+				<table>
+					<!-- 表单第一行，输入设备名称 -->
+					<tr>
+						<td>deviceName:</td> <!-- 表单标签，设备名称 -->
+						<td><input type="text" name="deviceName" required></td> <!-- 输入框，用户必须输入设备名称 -->
+					</tr>
+					<!-- 表单第二行，输入设备订阅主题 -->
+					<tr>
+						<td>deviceTopic:</td> <!-- 表单标签，设备订阅的MQTT主题 -->
+						<td><input type="text" name="deviceTopic" required></td> <!-- 输入框，用户必须输入设备订阅主题 -->
+					</tr>
+
+
+
+					<!-- 设备数据变量表格 -->
+					<table id="deviceVariableTable">
+						<!-- 表单第三行，输入设备数据变量名称 -->
+						<tr>
+							<button type="button" onclick="addDeviceVariable()">AddValue</button>
+							<td>ValueName:</td>
+							<!-- 输入框，用户必须输入变量名称 -->
+							<td><input type="text" name="deviceValueName[]" required></td>
+							<td>
+								<select name="deviceValueType[]" required>
+									<option value="int">int</option>
+									<option value="float">float</option>
+									<option value="bool">bool</option>
+								</select>
+							</td>
+
+
+							<td>
+								 <select name="data_direction[]" required>
+										<option value="receive">Receive</option>
+										<option value="send">Send</option>
+										<option value="both">Both</option>
+								 </select>
+							</td>
+
+
+							<td>
+								<button type="button" onclick="delectDeviceVariable(this)">delect</button>
+							</td>
+						</tr>
+					</table>
+				</table>
+				 <!-- 引入外部 JavaScript 文件 -->
+				<div class="submit">
+
+					<button type="submit" onclick="submitForm()">Commit</button> <!-- 提交表单的按钮 -->
+				</div>
+			</form>
+		</div>
+
+		<div class="panel">
+		<h2>Device List</h2>
+			<table id="device-table">
+				<thead>
+					<tr>
+						<th>Device Name</th> <!-- 设备名称 -->
+						<th>Client Id</th><!-- 客户端ID -->
+						<th>Device Topic</th> <!-- 设备主题 -->
+						<th>Device Value</th><!-- 设备数据 -->
+						<th>Actions</th> <!-- 操作 -->
+					</tr>
+				</thead>
+				<tbody>
+					{% for device in devices %}
+						<tr id="device-{{ device.device_id }}">
+							<td>{{ device.device_name }}</td> <!-- 设备名称 -->
+							<td>{{ device.device_client_id }}</td>
+							<td>{{ device.device_topic }}</td> <!-- 设备主题 -->
+							<td>{% for value in device.device_values %}
+								{{ value.value_type }}:{{value.data_direction}}:{{ value.value_type }}<br>
+							{% endfor %}</td>
+							<td>
+									<button type="button" data-device-id="{{ device.device_id }}">Delete</button>
+								<!-- 删除按钮 -->
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+	</div>
+
+<div class="panel">
+    <h2>Config MQTT Broker</h2> <!-- 标签页1的内容标题 -->
+    <form id="mqttConfigForm">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>标签</th>
+                    <th>输入框</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Broker Address:</td>
+                    <td><input type="text" id="server_address" name="server_address" maxlength="255" required></td>
+                </tr>
+                <tr>
+                    <td>Port:</td>
+                    <td><input type="number" id="port" name="port" required></td>
+                </tr>
+                <tr>
+                    <td>Client ID:</td>
+                    <td><input type="text" id="client_id" name="client_id" maxlength="255"></td>
+                </tr>
+                <tr>
+                    <td>Username:</td>
+                    <td><input type="text" id="username" name="username" maxlength="255"></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td>
+						<input type="password" id="password" name="password" maxlength="255">
+						<label for="showPassword" style="cursor: pointer;">
+							<span id="eye-icon" class="eye-icon">&#128065;</span> <!-- 眼睛图标 -->
+						</label>
+						<input type="checkbox" id="showPassword" style="display: none;">
+					</td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button type="button" onclick="submitMqttConfig()">Save</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+	</div> <!-- 面板结束 -->
+</article> <!-- 标签式布局结束 -->
+
+<!-- 引入外部JavaScript文件，用于页面交互逻辑 -->
+<script src="../../static/Script.js"></script>
+<script src="../../static/chart.js"></script>
+<script src="../../static/Card.js"></script>
+<script src="../../static/ConfigBroker.js"></script>
+<script src="../../static/DeleteEquipment.js"></script>
+<script src="../../static/AddEquipment.js"></script>
+<script src="../../static/home.js"></script>
+</body>
+</html>

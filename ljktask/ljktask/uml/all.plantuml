@@ -1,0 +1,120 @@
+@startuml
+skinparam pageSize A4
+skinparam classFontSize 10
+skinparam classAttributeFontSize 9
+skinparam classMethodFontSize 9
+
+package "User Interface" {
+    class HomePage {
+        + display_home_page()
+        + interact_with_devices()
+        + display_statistics()
+        + update_device_status(status: string)
+    }
+
+    class LoginPage {
+        + display_login_page()
+        + authenticate_user()
+    }
+
+    class DeviceManagement {
+        + add_device()
+        + delete_device()
+        + view_device_list()
+    }
+
+    class MqttConfig {
+        + view_mqtt_servers()
+        + configure_mqtt()
+    }
+
+    class ScriptControl {
+        + execute_script()
+        + schedule_script()
+    }
+
+    class DataStatistics {
+        + collect_device_data()
+        + display_statistics()
+    }
+}
+
+package "Backend" {
+    class Device {
+        + id : int
+        + device_name : string
+        + status : string
+        + add_device() : void
+        + delete_device() : void
+        + update_status(status: string) : void
+    }
+
+    class MqttServer {
+        + server_address : string
+        + port : int
+        + is_connected : bool
+        + connect() : void
+        + disconnect() : void
+    }
+
+    class DeviceController {
+        + device_list : List<Device>
+        + add_device(device: Device) : void
+        + delete_device(device_id: int) : void
+        + get_device_status(device_id: int) : string
+        + update_device_status(device_id: int, status: string) : void
+        + send_message_to_mqtt(message: string) : void
+    }
+
+    class MqttController {
+        + mqtt_servers : List<MqttServer>
+        + add_mqtt_server(mqtt: MqttServer) : void
+        + configure_mqtt_server(mqtt: MqttServer) : void
+        + get_connection_status(mqtt: MqttServer) : bool
+    }
+
+    class WebSocketServer {
+        + connect_to_frontend() : void
+        + push_data_to_frontend(data: string) : void
+        + subscribe_to_device_data() : void
+        + subscribe_to_statistics_data() : void
+    }
+}
+
+package "Database" {
+    class SQLite {
+        + store_device_data(device: Device)
+        + store_mqtt_config(mqtt: MqttServer)
+        + retrieve_device_data(device_id: int) : Device
+        + retrieve_mqtt_config(server_address: string) : MqttServer
+    }
+}
+
+HomePage --> DeviceManagement : "interacts with"
+HomePage --> MqttConfig : "views MQTT configuration"
+HomePage --> ScriptControl : "executes scripts"
+HomePage --> DataStatistics : "views statistics"
+LoginPage --> HomePage : "logs in to"
+DeviceManagement --> Device : "manages"
+MqttConfig --> MqttServer : "configures"
+DeviceController --> Device : "manages"
+MqttController --> MqttServer : "manages"
+ScriptControl --> DeviceController : "controls devices"
+DataStatistics --> DeviceController : "collects data from"
+Device --> SQLite : "stores device info"
+MqttServer --> SQLite : "stores MQTT config"
+DeviceController --> SQLite : "retrieves device data"
+MqttController --> SQLite : "retrieves MQTT config"
+SQLite --> SQLite : "stores data"
+
+WebSocketServer --> HomePage : "pushes data to"
+WebSocketServer --> DeviceController : "subscribes to device data"
+WebSocketServer --> DataStatistics : "subscribes to statistics data"
+DeviceController --> WebSocketServer : "sends device updates to"
+DataStatistics --> WebSocketServer : "sends statistics data to"
+SQLite --> WebSocketServer : "retrieves data for push"
+
+DeviceController --> MqttServer : "sends MQTT messages"
+MqttServer --> DeviceController : "receives MQTT messages"
+
+@enduml

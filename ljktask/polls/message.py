@@ -39,6 +39,7 @@ def get_device_subscriptions():
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
 
+<<<<<<< HEAD
     # 获取设备的订阅主题，并加上 `/pub` 后缀
     topics = get_device_subscriptions()
 
@@ -49,12 +50,24 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe(topic_with_pub)  # 订阅每个设备的主题
         print(f"Subscribed to topic: {topic_with_pub}")
 
+=======
+    # 获取设备的订阅主题
+    topics = get_device_subscriptions()
+
+
+    # 逐个订阅设备的主题
+    for topic in topics:
+        print(f"Subscribing to topic: {topic}")
+        client.subscribe(topic)  # 订阅每个设备的主题
+        print(f"Subscribed to topic: {topic}")
+>>>>>>> a771d89dfa2297c596e9b43fba204c235e1f5571
     if rc == 0:
         print("连接成功")
     else:
         print(f"连接失败，返回码 {rc}")
 
 def subscribe_device_topics(client):
+<<<<<<< HEAD
     # 获取设备的订阅主题，并加上 `/pub` 后缀
     topics = get_device_subscriptions()
 
@@ -65,6 +78,16 @@ def subscribe_device_topics(client):
         client.subscribe(topic_with_pub)  # 订阅每个设备的主题
         print(f"Subscribed to topic: {topic_with_pub}")
 
+=======
+    # 这里根据设备信息生成相应的 MQTT 主题
+    # 假设每个设备有一个唯一的 device_id 并且主题遵循 'device/{device_id}/data'
+    topics = get_device_subscriptions()
+    # start_timer()
+    # 逐个订阅设备的主题
+    for topic in topics:
+        print(f"Subscribing to topic: {topic}")
+        client.subscribe(topic)
+>>>>>>> a771d89dfa2297c596e9b43fba204c235e1f5571
 def on_disconnect(client, userdata, rc):
     if rc != 0:
         print("断开连接，返回码", rc)
@@ -232,18 +255,27 @@ def publish_message(topic, message):
     :param topic: 发布消息的主题
     :param message: 要发布的消息内容，应该是一个字典或者可转为 JSON 的对象
     """
+<<<<<<< HEAD
     # 将主题加上 `/sub` 后缀
     topic_with_sub = f"{topic}/sub"
 
     # 打印调试信息，输出发布的主题和消息
     print("Publishing message to topic:", topic_with_sub)
+=======
+    # 打印调试信息，输出发布的主题和消息
+    print("Publishing message to topic:", topic)
+>>>>>>> a771d89dfa2297c596e9b43fba204c235e1f5571
     print("Message:", message)
 
     # 将消息内容转换为 JSON 格式的字符串
     message_str = json.dumps(message)
 
     # 使用 MQTT 客户端发布消息到指定主题
+<<<<<<< HEAD
     client.publish(topic_with_sub, message_str)
+=======
+    client.publish(topic, message_str)
+>>>>>>> a771d89dfa2297c596e9b43fba204c235e1f5571
 
 # 一个全局变量，用来保存所有定时器线程
 active_timers = []
